@@ -1,0 +1,28 @@
+<p-sidebar [(visible)]="sidebarVisivel">
+  <ng-template pTemplate="header">
+    <img
+      src="../../../assets/images/prisma-icon.png"
+      style="max-width: 50px; height: auto"
+    />
+  </ng-template>
+  <ng-template pTemplate="content">
+    <p-menu [model]="items"></p-menu>
+  </ng-template>
+
+  <ng-template pTemplate="footer">footer</ng-template>
+</p-sidebar>
+
+<div
+  *ngIf="!sidebarVisivel"
+  style="
+    position: absolute;
+    left: 0;
+    top: 30%;
+    border-radius: 0px 24px 24px 0px;
+    padding: 8px 4px 8px 0;
+  "
+  class="bg-primary cursor-pointer"
+  (click)="sidebarVisivel = true"
+>
+  <i class="pi pi-angle-right" style="font-size: 2rem"></i>
+</div>

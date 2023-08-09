@@ -1,0 +1,22 @@
+<div
+  class="flex justify-content-start align-items-center w-full h-3rem bg-primary shadow-3"
+>
+  <img
+    src="../../../assets/images/prisma-icon.png"
+    class="w-auto h-3rem p-2 ml-4 mr-2"
+  />
+
+  <div class="flex flex-1 justify-content-end">
+    <p-menu #menuUsuario [model]="items" [popup]="true"></p-menu>
+
+    <button
+      pButton
+      type="button"
+      (click)="menuUsuario.toggle($event)"
+      class="p-button-text p-button-plain text-white mr-8 capitalize"
+      icon="pi pi-user"
+      [label]="'Olá, ' + usuario.fullName"
+      iconPos="right"
+    ></button>
+  </div>
+</div>

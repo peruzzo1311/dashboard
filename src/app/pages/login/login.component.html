@@ -1,0 +1,79 @@
+<main
+  class="grid grid-nogutter bg-gray-100 h-screen zoomin animation-duration-500 animation-ease-out"
+>
+  <div
+    class="col-9"
+    style="
+      background-image: url(../assets/images/prisma-logo.png);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+    "
+  ></div>
+
+  <div
+    class="col-3 bg-white shadow-3 p-2 flex flex-column justify-content-center"
+  >
+    <div>
+      <a
+        href="https://prismainformatica.com.br/"
+        class="flex justify-content-center mb-8"
+      >
+        <img
+          src="../assets/images/prisma-icon.png"
+          alt="Prisma gestão de softwares"
+        />
+      </a>
+    </div>
+
+    <form
+      pFocusTrap
+      (ngSubmit)="entrar(usuario.value, senha.value)"
+      novalidate
+      class="w-full flex flex-column justify-content-center gap-3 px-4"
+    >
+      <span class="p-float-label w-full">
+        <input
+          #usuario
+          pAutoFocus
+          pInputText
+          required
+          [autofocus]="true"
+          class="p-inputtext-sm w-full"
+          autocomplete="email"
+        />
+
+        <label>Usuário</label>
+      </span>
+
+      <span class="p-float-label p-input-icon-right w-full">
+        <i
+          class="cursor-pointer"
+          [ngClass]="mostrarSenha ? 'pi  pi-eye' : 'pi pi-eye-slash'"
+          (click)="toggleMostrarSenha()"
+        ></i>
+
+        <input
+          #senha
+          pInputText
+          pAutoFocus
+          required
+          class="p-inputtext-sm w-full"
+          autocomplete="current-password"
+          [type]="mostrarSenha ? 'text' : 'password'"
+        />
+
+        <label>Senha</label>
+      </span>
+
+      <button
+        pButton
+        pRipple
+        [label]="carregando ? 'Carregando...' : 'Entrar'"
+        class="p-button-primary p-button-raised w-full p-button-sm uppercase mt-4"
+        [loading]="carregando"
+        type="submit"
+      ></button>
+    </form>
+  </div>
+</main>
