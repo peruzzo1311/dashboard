@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent {}
+export class DashboardComponent {
+  constructor(private router: Router) {
+    router.navigate(['/dashboard/inicio']);
+  }
+}

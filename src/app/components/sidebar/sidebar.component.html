@@ -5,11 +5,26 @@
       style="max-width: 50px; height: auto"
     />
   </ng-template>
+
   <ng-template pTemplate="content">
     <p-menu [model]="items"></p-menu>
   </ng-template>
 
-  <ng-template pTemplate="footer">footer</ng-template>
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-center align-items-center">
+      <span>Desenvolvido por</span>
+
+      <a
+        class="flex justify-content-center align-items-center"
+        href="https://prismainformatica.com.br/"
+      >
+        <img
+          src="../../../assets/images/prisma-logo-pequena.png"
+          alt="Prisma"
+        />
+      </a>
+    </div>
+  </ng-template>
 </p-sidebar>
 
 <div

@@ -9,6 +9,9 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { FocusTrapModule } from 'primeng/focustrap';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
+import { CardModule } from 'primeng/card';
+import { ToastModule } from 'primeng/toast';
+import { ChartModule } from 'primeng/chart';
 
 import { ComponentsModule } from '../components/components.module';
 import { BoletosComponent } from './dashboard/boletos/boletos.component';
@@ -48,6 +51,9 @@ import { PagesRoutingModule } from './pages-routing.module';
     FocusTrapModule,
     InputTextModule,
     RippleModule,
+    CardModule,
+    ToastModule,
+    ChartModule,
   ],
 })
 export class PagesModule {}
