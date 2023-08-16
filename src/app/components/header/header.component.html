@@ -3,7 +3,8 @@
 >
   <img
     src="../../../assets/images/prisma-icon.png"
-    class="w-auto h-3rem p-2 ml-4 mr-2"
+    class="w-auto h-3rem p-2 ml-4 mr-2 cursor-pointer"
+    (click)="router.navigate(['/'])"
   />
 
   <div class="flex flex-1 justify-content-end">
@@ -14,18 +15,9 @@
       type="button"
       (click)="menuUsuario.toggle($event)"
       class="p-button-text p-button-plain text-white mr-8 capitalize"
-      icon="pi pi-user"
+      icon="pi pi-angle-down"
       [label]="'Olá, ' + usuario.fullName"
       iconPos="right"
-    ></button>
-
-    <button
-      pButton
-      pRipple
-      type="button"
-      [icon]="tema === 'light-theme' ? 'pi pi-sun' : 'pi pi-moon'"
-      class="mr-4"
-      (click)="mudarTema()"
     ></button>
   </div>
 </div>

@@ -11,12 +11,31 @@ import { LoginComponent } from './login/login.component';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
+    redirectTo: 'login',
+  },
+  {
+    path: 'login',
     component: LoginComponent,
   },
   {
     path: 'dashboard',
     component: DashboardComponent,
+    canActivateChild: [
+      () => {
+        if (sessionStorage.getItem('usuario')) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+    ],
     children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'inicio',
+      },
       {
         path: 'inicio',
         component: InicioComponent,

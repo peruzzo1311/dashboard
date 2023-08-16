@@ -12,14 +12,22 @@ import Usuario from 'src/app/types/Usuario';
 export class HeaderComponent {
   items: MenuItem[];
   usuario: Usuario;
-  tema: 'dark-theme' | 'light-theme' = 'light-theme';
+  tema: 'dark-theme' | 'light-theme';
 
-  constructor(private router: Router, private themeService: ThemeService) {
+  constructor(public router: Router, private themeService: ThemeService) {
     this.usuario = JSON.parse(sessionStorage.getItem('usuario') || '');
+    this.tema = localStorage.getItem('tema') as 'dark-theme' | 'light-theme';
 
     this.items = [
       {
         items: [
+          {
+            label: this.tema === 'light-theme' ? 'Tema escuro' : 'Tema claro',
+            icon: this.tema === 'light-theme' ? 'pi pi-moon' : 'pi pi-sun',
+            command: () => {
+              this.mudarTema();
+            },
+          },
           {
             label: 'Sair',
             icon: 'pi pi-sign-out',
@@ -37,6 +45,28 @@ export class HeaderComponent {
     this.tema = this.tema === 'light-theme' ? 'dark-theme' : 'light-theme';
 
     localStorage.setItem('tema', this.tema);
+
+    this.items = [
+      {
+        items: [
+          {
+            label: this.tema === 'light-theme' ? 'Tema escuro' : 'Tema claro',
+            icon: this.tema === 'light-theme' ? 'pi pi-moon' : 'pi pi-sun',
+            command: () => {
+              this.mudarTema();
+            },
+          },
+          {
+            label: 'Sair',
+            icon: 'pi pi-sign-out',
+            command: () => {
+              sessionStorage.removeItem('usuario');
+              this.router.navigate(['']);
+            },
+          },
+        ],
+      },
+    ];
 
     this.themeService.mudarTema(this.tema);
   }
