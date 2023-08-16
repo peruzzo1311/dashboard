@@ -1,3 +1,106 @@
 <div class="fadeinright animation-duration-500 animation-ease-out">
-  <p>notas works!</p>
+  <p-card>
+    <p-table
+      #tableNotas
+      [value]="notas"
+      styleClass="p-datatable-striped"
+      [(selection)]="notasSelecionadas"
+      [paginator]="true"
+      [rows]="quantidadeLinhas"
+      [totalRecords]="totalRegistros"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="carregando"
+      loadingIcon="pi pi-spin pi-spinner"
+      (sortFunction)="ordenar($event)"
+      [customSort]="true"
+      dataKey="numNff"
+      [globalFilterFields]="['numNfv', 'nomCli', 'desObr', 'datAut']"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between">
+          <button
+            pButton
+            pRipple
+            label="Baixar Notas"
+            [class]="
+              notasSelecionadas.length === 0
+                ? 'p-button-outlined'
+                : 'p-button-primary'
+            "
+            icon="pi pi-download"
+            (click)="baixarMultiplasNotas()"
+            [disabled]="notasSelecionadas.length === 0"
+          ></button>
+
+          <div class="flex gap-4">
+            <button
+              pButton
+              label="Limpar filtro"
+              class="p-button-outlined"
+              icon="pi pi-filter-slash"
+              (click)="clear(tableNotas)"
+            ></button>
+
+            <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="valorInput"
+                class="p-inputtext-sm"
+                (input)="tableNotas.filterGlobal(valorInput, 'contains')"
+                placeholder="Pesquisar Nota..."
+              />
+            </span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem">
+            <p-tableHeaderCheckbox />
+          </th>
+          <th pSortableColumn="numNfv">
+            Nota fiscal <p-sortIcon field="numNfv"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="nomCli">
+            Cliente <p-sortIcon field="nomCli"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="desObr">
+            Obra <p-sortIcon field="desObr"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="datAut">
+            Data <p-sortIcon field="datAut"> </p-sortIcon>
+          </th>
+          <th class="flex justify-content-center">Baixar</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-nota>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="nota" />
+          </td>
+          <td>{{ nota.numNfv }}</td>
+          <td>{{ nota.nomCli }}</td>
+          <td>{{ nota.desObr }}</td>
+          <td>{{ nota.datAut }}</td>
+          <td class="flex justify-content-center">
+            <i
+              [class]="
+                nota.baixando
+                  ? 'pi pi-spin pi-spinner'
+                  : 'pi pi-download cursor-pointer'
+              "
+              style="font-size: 1.5rem"
+              (click)="nota.baixando ? null : baixarNotas(nota)"
+            ></i>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
 </div>
+
+<p-toast></p-toast>

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
+import { forkJoin, map } from 'rxjs';
 import { InicioService } from 'src/app/services/inicio.service';
 import { Meses } from 'src/app/types/exportaVolumeMeses';
 
@@ -18,7 +19,7 @@ export interface DadosGraficoBarras {
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
   styleUrls: ['./inicio.component.scss'],
-  providers: [MessageService],
+  providers: [MessageService, InicioService],
 })
 export class InicioComponent {
   cards: Card[] = [];
@@ -46,62 +47,89 @@ export class InicioComponent {
   }
 
   getCards() {
-    this.inicioService.exportaVolumesMeses().subscribe((data) => {
-      let volumeMensalConsumido = 0;
+    const exportaVolumesMeses$ = this.inicioService.exportaVolumesMeses().pipe(
+      map((data) => {
+        if (data.codRet === 0) {
+          this.getDadosGraficoBarras(data.meses);
 
-      if (data.codRet === 0) {
-        this.getDadosGraficoBarras(data.meses);
-
-        data.meses.forEach((mes) => {
-          if (mes.obras) {
-            if (Array.isArray(mes.obras)) {
-              mes.obras.forEach((obra) => {
-                volumeMensalConsumido += obra.volMt3;
-              });
-            } else {
-              volumeMensalConsumido += mes.obras.volMt3;
+          const volumeMensalConsumido = data.meses.reduce((total, mes) => {
+            if (mes.obras) {
+              if (Array.isArray(mes.obras)) {
+                total += mes.obras.reduce(
+                  (mesTotal, obra) => mesTotal + obra.volMt3,
+                  0
+                );
+              } else {
+                total += mes.obras.volMt3;
+              }
             }
+
+            return total;
+          }, 0);
+
+          return {
+            titulo: 'Volume dos últimos 6 meses',
+            valor: `${volumeMensalConsumido} m³`,
+            icone: 'pi pi-users',
+          };
+        } else {
+          this.mensagemErro(data.msgRet);
+
+          return null;
+        }
+      })
+    );
+
+    const consultaValorFaturadoMes$ = this.inicioService
+      .consultaValorFaturadoMes()
+      .pipe(
+        map((data) => {
+          if (data.codRet === 0) {
+            return {
+              titulo: 'Faturamento do mês atual',
+              valor: data.vlrFat.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL',
+              }),
+              icone: 'pi pi-money-bill',
+            };
+          } else {
+            this.mensagemErro(data.msgRet);
+
+            return null;
           }
-        });
-      } else {
-        this.mensagemErro(data.msgRet);
-      }
+        })
+      );
 
-      this.cards.push({
-        titulo: 'Volume dos últimos 6 meses',
-        valor: `${volumeMensalConsumido} m³`,
-        icone: 'pi pi-users',
+    const consultaVolumeMes$ = this.inicioService.consultaVolumeMes().pipe(
+      map((data) => {
+        if (data.codRet === 0) {
+          return {
+            titulo: 'Concretagem do mês atual',
+            valor: `${data.volMt3} m³`,
+            icone: 'pi pi-truck',
+          };
+        } else {
+          this.mensagemErro(data.msgRet);
+
+          return null;
+        }
+      })
+    );
+
+    forkJoin([
+      exportaVolumesMeses$,
+      consultaValorFaturadoMes$,
+      consultaVolumeMes$,
+    ]).subscribe((results) => {
+      results.forEach((result) => {
+        if (result) {
+          this.cards.push(result);
+        }
       });
-    });
 
-    this.inicioService.consultaValorFaturadoMes().subscribe((data) => {
-      if (data.codRet === 0) {
-        this.cards.push({
-          titulo: 'Faturamento do mês atual',
-          valor: data.vlrFat.toLocaleString('pt-BR', {
-            style: 'currency',
-            currency: 'BRL',
-          }),
-          icone: 'pi pi-money-bill',
-        });
-      } else {
-        this.mensagemErro(data.msgRet);
-      }
+      this.carregando = false;
     });
-
-    this.inicioService.consultaVolumeMes().subscribe((data) => {
-      if (data.codRet === 0) {
-        this.cards.push({
-          titulo: 'Concretagem do mês atual',
-          valor: `${data.volMt3} m³`,
-          icone: 'pi pi-truck',
-        });
-      } else {
-        this.mensagemErro(data.msgRet);
-      }
-    });
-
-    this.carregando = false;
   }
 
   getDadosGraficoBarras(data: Meses[]) {

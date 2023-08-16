@@ -16,8 +16,10 @@ export interface clientesObras {
   providedIn: 'root',
 })
 export class InicioService {
-  usuario: Usuario = JSON.parse(sessionStorage.getItem('usuario') || '{}');
-  clientesObras: clientesObras[] = [];
+  private usuario: Usuario = JSON.parse(
+    sessionStorage.getItem('usuario') || '{}'
+  );
+  private clientesObras: clientesObras[] = [];
 
   constructor(private http: HttpClient, private router: Router) {
     if (!this.usuario) {

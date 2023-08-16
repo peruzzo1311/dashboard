@@ -5,23 +5,22 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AnimateModule } from 'primeng/animate';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FocusTrapModule } from 'primeng/focustrap';
 import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
-import { CardModule } from 'primeng/card';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
-import { ChartModule } from 'primeng/chart';
 
 import { ComponentsModule } from '../components/components.module';
 import { BoletosComponent } from './dashboard/boletos/boletos.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FaturasComponent } from './dashboard/faturas/faturas.component';
 import { InicioComponent } from './dashboard/inicio/inicio.component';
-import { LaudosEmitidosComponent } from './dashboard/laudos-emitidos/laudos-emitidos.component';
-import { LaudosSolicitadosComponent } from './dashboard/laudos-solicitados/laudos-solicitados.component';
 import { NotasComponent } from './dashboard/notas/notas.component';
-import { SolicitarLaudosComponent } from './dashboard/solicitar-laudos/solicitar-laudos.component';
 import { LoginComponent } from './login/login.component';
 import { PagesRoutingModule } from './pages-routing.module';
 
@@ -33,9 +32,6 @@ import { PagesRoutingModule } from './pages-routing.module';
     BoletosComponent,
     FaturasComponent,
     NotasComponent,
-    SolicitarLaudosComponent,
-    LaudosSolicitadosComponent,
-    LaudosEmitidosComponent,
   ],
   imports: [
     CommonModule,
@@ -54,6 +50,8 @@ import { PagesRoutingModule } from './pages-routing.module';
     CardModule,
     ToastModule,
     ChartModule,
+    SkeletonModule,
+    TableModule,
   ],
 })
 export class PagesModule {}

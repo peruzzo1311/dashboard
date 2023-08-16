@@ -18,5 +18,14 @@
       [label]="'Olá, ' + usuario.fullName"
       iconPos="right"
     ></button>
+
+    <button
+      pButton
+      pRipple
+      type="button"
+      [icon]="tema === 'light-theme' ? 'pi pi-sun' : 'pi pi-moon'"
+      class="mr-4"
+      (click)="mudarTema()"
+    ></button>
   </div>
 </div>

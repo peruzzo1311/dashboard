@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { ThemeService } from 'src/app/services/theme.service';
 import Usuario from 'src/app/types/Usuario';
 
 @Component({
@@ -11,8 +12,9 @@ import Usuario from 'src/app/types/Usuario';
 export class HeaderComponent {
   items: MenuItem[];
   usuario: Usuario;
+  tema: 'dark-theme' | 'light-theme' = 'light-theme';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private themeService: ThemeService) {
     this.usuario = JSON.parse(sessionStorage.getItem('usuario') || '');
 
     this.items = [
@@ -29,5 +31,13 @@ export class HeaderComponent {
         ],
       },
     ];
+  }
+
+  mudarTema() {
+    this.tema = this.tema === 'light-theme' ? 'dark-theme' : 'light-theme';
+
+    localStorage.setItem('tema', this.tema);
+
+    this.themeService.mudarTema(this.tema);
   }
 }

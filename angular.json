@@ -30,7 +30,17 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              {
+                "input": "src/styles/dark-theme.css",
+                "bundleName": "dark-theme",
+                "inject": false
+              },
+              {
+                "input": "src/styles/light-theme.css",
+                "bundleName": "light-theme",
+                "inject": false
+              }
             ],
             "scripts": [
               "./node_modules/chart.js/dist/chart.js"
@@ -95,7 +105,17 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              {
+                "input": "src/styles/dark-theme.css",
+                "bundleName": "dark-theme",
+                "inject": false
+              },
+              {
+                "input": "src/styles/light-theme.css",
+                "bundleName": "light-theme",
+                "inject": false
+              }
             ],
             "scripts": [
               "./node_modules/chart.js/dist/chart.js"

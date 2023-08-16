@@ -1,3 +1,109 @@
 <div class="fadeinright animation-duration-500 animation-ease-out">
-  <p>boletos works!</p>
+  <p-card>
+    <p-table
+      #tableBoletos
+      [value]="boletos"
+      styleClass="p-datatable-striped"
+      [(selection)]="boletosSelecionados"
+      dataKey="numNff"
+      [paginator]="true"
+      [rows]="quantidadeLinhas"
+      [totalRecords]="totalRegistros"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="carregando"
+      loadingIcon="pi pi-spin pi-spinner"
+      (sortFunction)="ordenar($event)"
+      [customSort]="true"
+      [globalFilterFields]="['numNff', 'nomCli', 'vlrAbe', 'vctPro']"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between">
+          <button
+            pButton
+            pRipple
+            label="Baixar boletos"
+            [class]="
+              boletosSelecionados.length === 0
+                ? 'p-button-outlined'
+                : 'p-button-primary'
+            "
+            styleClass="p-button"
+            [disabled]="boletosSelecionados.length === 0"
+            (click)="baixarMultiplosTitulos()"
+          ></button>
+
+          <div class="flex gap-4">
+            <button
+              pButton
+              pRipple
+              label="Limpar filtro"
+              class="p-button-outlined"
+              icon="pi pi-filter-slash"
+              (click)="clear(tableBoletos)"
+            ></button>
+
+            <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                class="p-inputtext-sm"
+                [(ngModel)]="valorInput"
+                (input)="tableBoletos.filterGlobal(valorInput, 'contains')"
+                placeholder="Pesquisar boleto..."
+              />
+            </span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem">
+            <p-tableHeaderCheckbox />
+          </th>
+          <th pSortableColumn="numNff">
+            N° da fatura <p-sortIcon field="numNff"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="nomCli">
+            Destinatário <p-sortIcon field="nomCli"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="vlrAbe">
+            Valor <p-sortIcon field="vlrAbe"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="vctPro">
+            Data de vencimento <p-sortIcon field="vctPro"> </p-sortIcon>
+          </th>
+          <th class="flex justify-content-center">Baixar</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-boleto>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="boleto" />
+          </td>
+          <td>{{ boleto.numNff }}</td>
+          <td>{{ boleto.nomCli }}</td>
+          <td>
+            {{ boleto.vlrAbe | currency : "BRL" : "symbol" : "1.2-2" }}
+          </td>
+          <td>{{ boleto.vctPro }}</td>
+          <td class="flex justify-content-center">
+            <i
+              [class]="
+                boleto.baixando
+                  ? 'pi pi-spin pi-spinner'
+                  : 'pi pi-download cursor-pointer'
+              "
+              style="font-size: 1.5rem"
+              (click)="boleto.baixando ? null : baixarTitulos(boleto)"
+            ></i>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
 </div>
+
+<p-toast></p-toast>

@@ -1,3 +1,134 @@
 <div class="fadeinright animation-duration-500 animation-ease-out">
-  <p>faturas works!</p>
+  <p-card>
+    <p-table
+      #tableFaturas
+      [value]="faturas"
+      styleClass="p-datatable-striped"
+      [paginator]="true"
+      [rows]="quantidadeLinhas"
+      [totalRecords]="totalRegistros"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="carregando"
+      loadingIcon="pi pi-spin pi-spinner"
+      (sortFunction)="ordenar($event)"
+      [customSort]="true"
+      dataKey="numNff"
+      [globalFilterFields]="['numNff', 'nomCli', 'vlrTot', 'datGer']"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-end">
+          <div class="flex gap-4">
+            <button
+              pButton
+              label="Limpar filtro"
+              class="p-button-outlined"
+              icon="pi pi-filter-slash"
+              (click)="clear(tableFaturas)"
+            ></button>
+
+            <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="valorInput"
+                class="p-inputtext-sm"
+                (input)="tableFaturas.filterGlobal(valorInput, 'contains')"
+                placeholder="Pesquisar fatura..."
+              />
+            </span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem"></th>
+          <th pSortableColumn="numNff">
+            N° da fatura <p-sortIcon field="numNff"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="nomCli">
+            Destinatário <p-sortIcon field="nomCli"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="vlrTot">
+            Total <p-sortIcon field="vlrTot"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="datGer">
+            Data <p-sortIcon field="datGer"> </p-sortIcon>
+          </th>
+          <th class="flex justify-content-center">Baixar</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-fatura let-expanded="expanded">
+        <tr>
+          <td>
+            <button
+              type="button"
+              pButton
+              pRipple
+              [pRowToggler]="fatura"
+              class="p-button-text p-button-rounded p-button-plain"
+              [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            ></button>
+          </td>
+          <td>{{ fatura.numNff }}</td>
+          <td>{{ fatura.nomCli }}</td>
+          <td>{{ fatura.vlrTot | currency : "BRL" : "symbol" : "1.2-2" }}</td>
+          <td>{{ fatura.datGer }}</td>
+          <td class="flex justify-content-center">
+            <i
+              [class]="
+                fatura.baixando
+                  ? 'pi pi-spin pi-spinner'
+                  : 'pi pi-download cursor-pointer'
+              "
+              style="font-size: 1.5rem; padding: 0.8rem"
+              (click)="fatura.baixando ? null : baixarFatura(fatura)"
+            ></i>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="rowexpansion" let-fatura>
+        <tr>
+          <td colspan="6">
+            <p-card>
+              <p-table [value]="fatura.notas" dataKey="numNfv">
+                <ng-template pTemplate="header">
+                  <tr>
+                    <th>Nota fiscal</th>
+                    <th>Obra</th>
+                    <th>Valor líquido</th>
+                    <th class="flex justify-content-center">Baixar nota</th>
+                  </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-nota>
+                  <tr>
+                    <td>{{ nota.numNfv }}</td>
+                    <td>{{ nota.desObr }}</td>
+                    <td>{{ nota.vlrLiq }}</td>
+                    <td class="flex justify-content-center">
+                      <i
+                        [class]="
+                          nota.baixando
+                            ? 'pi pi-spin pi-spinner'
+                            : 'pi pi-download cursor-pointer'
+                        "
+                        style="font-size: 1.5rem"
+                        (click)="nota.baixando ? null : baixarNota(nota)"
+                      ></i>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </p-card>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
 </div>
+
+<p-toast></p-toast>

@@ -60,38 +60,6 @@ export class SidebarComponent {
           },
         ],
       },
-      {
-        label: 'Laudos',
-        items: [
-          {
-            label: 'Solicitar Laudo',
-            icon: 'pi pi-fw pi-plus',
-            routerLink: ['/dashboard/solicitar-laudos'],
-
-            command: () => {
-              this.sidebarVisivel = false;
-            },
-          },
-          {
-            label: 'Laudos Solicitados',
-            icon: 'pi pi-fw pi-list',
-            routerLink: ['/dashboard/laudos-solicitados'],
-
-            command: () => {
-              this.sidebarVisivel = false;
-            },
-          },
-          {
-            label: 'Laudos Emitidos',
-            icon: 'pi pi-fw pi-file',
-            routerLink: ['/dashboard/laudos-emitidos'],
-
-            command: () => {
-              this.sidebarVisivel = false;
-            },
-          },
-        ],
-      },
     ];
   }
 }
