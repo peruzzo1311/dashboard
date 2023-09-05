@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MessageService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { Subscription } from 'rxjs';
 import { BoletosService } from 'src/app/services/boletos.service';
 import { Titulo } from 'src/app/types/exportaTitulos';
 
@@ -18,6 +19,9 @@ export class BoletosComponent {
   carregando: boolean = true;
   valorInput: string = '';
 
+  exportaTitulos$!: Subscription;
+  baixarTitulos$!: Subscription;
+
   constructor(
     private boletosService: BoletosService,
     private messageService: MessageService
@@ -26,30 +30,34 @@ export class BoletosComponent {
   }
 
   exportaTitulos() {
-    this.boletosService.exportaTitulos().subscribe((data) => {
-      if (data.codRet === 0) {
-        this.boletos = data.titulos;
-        this.totalRegistros = this.boletos.length;
-      } else {
-        this.mensagemErro(data.msgRet);
-      }
+    this.exportaTitulos$ = this.boletosService
+      .exportaTitulos()
+      .subscribe((data) => {
+        if (data.codRet === 0) {
+          this.boletos = data.titulos;
+          this.totalRegistros = this.boletos.length;
+        } else {
+          this.mensagemErro(data.msgRet);
+        }
 
-      this.carregando = false;
-    });
+        this.carregando = false;
+      });
   }
 
   baixarTitulos(boleto: Titulo) {
     boleto.baixando = true;
 
-    this.boletosService.baixarTitulos(boleto).subscribe((data) => {
-      if (data.codRet === 0) {
-        this.base64ParaPdf(data.pdfBol, `boleto_${boleto.numTit}.pdf`);
-      } else {
-        this.mensagemErro(data.msgRet);
-      }
+    this.baixarTitulos$ = this.boletosService
+      .baixarTitulos(boleto)
+      .subscribe((data) => {
+        if (data.codRet === 0) {
+          this.base64ParaPdf(data.pdfBol, `boleto_${boleto.numTit}.pdf`);
+        } else {
+          this.mensagemErro(data.msgRet);
+        }
 
-      boleto.baixando = false;
-    });
+        boleto.baixando = false;
+      });
   }
 
   baixarMultiplosTitulos() {
@@ -136,5 +144,15 @@ export class BoletosComponent {
 
   clear(table: Table) {
     table.clear();
+  }
+
+  ngOnDestroy() {
+    if (this.exportaTitulos$) {
+      this.exportaTitulos$.unsubscribe();
+    }
+
+    if (this.baixarTitulos$) {
+      this.baixarTitulos$.unsubscribe();
+    }
   }
 }

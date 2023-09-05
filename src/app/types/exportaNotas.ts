@@ -8,7 +8,6 @@ export interface Nota {
   numNfv: number;
   codCli: number;
   numDfs: number;
-  desObr: string;
   nomCli: string;
   datAut: string;
   chvDoe: string;

@@ -1,15 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import Usuario from '../types/Usuario';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import ConsultaVolumeMes from '../types/consultaVolumeMes';
+import ContasPagar from '../types/ContasPagar';
+import Usuario from '../types/Usuario';
 import ConsultaValorFaturadoMes from '../types/consultaValorFaturadoMes';
-import ExportaVolumeMeses from '../types/exportaVolumeMeses';
-import ExportaVolumeObrasMes from '../types/exportaVolumeObrasMes';
+import consultaValorFaturadoMesAnterior from '../types/consultaValorFaturadoMesAnterior';
 
-export interface clientesObras {
-  clienteObra: string;
+export interface codCli {
+  codCli: string | number;
 }
 
 @Injectable({
@@ -19,41 +18,37 @@ export class InicioService {
   private usuario: Usuario = JSON.parse(
     sessionStorage.getItem('usuario') || '{}'
   );
-  private clientesObras: clientesObras[] = [];
+  private codCli: codCli = {
+    codCli: '',
+  };
 
   constructor(private http: HttpClient, private router: Router) {
     if (!this.usuario) {
       router.navigate(['/login']);
     } else {
-      this.clientesObras = this.usuario.properties.map((item) => {
-        const { name, value } = item;
+      this.usuario.properties.forEach((propriedade) => {
+        const { name, value } = propriedade;
 
-        if (value.toLowerCase() == 'todas') {
-          return {
-            clienteObra: item.name,
-          };
-        } else {
-          return {
-            clienteObra: `${name}-${value}`,
+        if (name.toLowerCase() === 'codcli') {
+          this.codCli = {
+            codCli: value,
           };
         }
       });
     }
   }
 
-  consultaVolumeMes(): Observable<ConsultaVolumeMes> {
-    const body = {
-      clientesObras: this.clientesObras,
-    };
+  consultaValorFaturadoMesAnterior(): Observable<consultaValorFaturadoMesAnterior> {
+    const body = this.codCli;
 
-    return this.http.post<ConsultaVolumeMes>(
-      'https://concresuper.prismainformatica.com.br:8181/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal&port=ConsultaVolumeMes&useAlwaysArray=true',
+    return this.http.post<consultaValorFaturadoMesAnterior>(
+      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaFaturasMesAnterior&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'integracao.portal',
-          pass: 'ConCrEp0Rt@l',
-          encryptionType: '0',
+          user: 'suporte',
+          pass: '@98fm',
+          EncryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
         },
@@ -62,18 +57,16 @@ export class InicioService {
   }
 
   consultaValorFaturadoMes(): Observable<ConsultaValorFaturadoMes> {
-    const body = {
-      clientesObras: this.clientesObras,
-    };
+    const body = this.codCli;
 
     return this.http.post<ConsultaValorFaturadoMes>(
-      'https://concresuper.prismainformatica.com.br:8181/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal&port=ConsultaValorFaturadoMes&useAlwaysArray=true',
+      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaFaturasMesAtual&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'integracao.portal',
-          pass: 'ConCrEp0Rt@l',
-          encryptionType: '0',
+          user: 'suporte',
+          pass: '@98fm',
+          EncryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
         },
@@ -81,41 +74,23 @@ export class InicioService {
     );
   }
 
-  exportaVolumesMeses(): Observable<ExportaVolumeMeses> {
+  ContasPagar(): Observable<ContasPagar> {
     const body = {
-      clientesObras: this.clientesObras,
+      context: {
+        PREVENT_DATASET_EXCEPTION: true,
+      },
+      displayBlock: false,
+      filters: [],
+      id: 'dataset://factory/default/erpxt/analytics/financial_pay_graph',
     };
 
-    return this.http.post<ExportaVolumeMeses>(
-      'https://concresuper.prismainformatica.com.br:8181/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal&port=ExportaVolumesMeses&useAlwaysArray=true',
+    return this.http.post<ContasPagar>(
+      'https://platform.senior.com.br/t/senior.com.br/bridge/1.0/rest/platform/dataset/queries/executeDataset',
       body,
       {
         headers: {
-          user: 'integracao.portal',
-          pass: 'ConCrEp0Rt@l',
-          encryptionType: '0',
-          Authorization: '',
           'Content-Type': 'application/json',
-        },
-      }
-    );
-  }
-
-  exportaVolumeObrasMes(): Observable<ExportaVolumeObrasMes> {
-    const body = {
-      clientesObras: this.clientesObras,
-    };
-
-    return this.http.post<ExportaVolumeObrasMes>(
-      'https://concresuper.prismainformatica.com.br:8181/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal&port=ExportaVolumeObrasMes&useAlwaysArray=true',
-      body,
-      {
-        headers: {
-          user: 'integracao.portal',
-          pass: 'ConCrEp0Rt@l',
-          encryptionType: '0',
-          Authorization: '',
-          'Content-Type': 'application/json',
+          Authorization: this.usuario.token,
         },
       }
     );

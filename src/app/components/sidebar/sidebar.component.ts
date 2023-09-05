@@ -29,21 +29,12 @@ export class SidebarComponent {
         ],
       },
       {
-        label: 'Faturas e notas Fiscais',
+        label: 'Boletos e notas Fiscais',
         items: [
           {
             label: 'Boletos',
             icon: 'pi pi-fw pi-ticket',
             routerLink: ['/dashboard/boletos'],
-
-            command: () => {
-              this.sidebarVisivel = false;
-            },
-          },
-          {
-            label: 'Faturas',
-            icon: 'pi pi-fw pi-file',
-            routerLink: ['/dashboard/faturas'],
 
             command: () => {
               this.sidebarVisivel = false;

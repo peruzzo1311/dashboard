@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import Usuario from '../types/Usuario';
-import { clientesObras } from './inicio.service';
-import exportaNotas, { Nota } from '../types/exportaNotas';
 import { Observable } from 'rxjs';
+
 import baixarNotas from '../types/baixarNotas';
+import exportaNotas, { Nota } from '../types/exportaNotas';
+import Usuario from '../types/Usuario';
+import { codCli } from './inicio.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,22 +15,20 @@ export class NotasService {
   private usuario: Usuario = JSON.parse(
     sessionStorage.getItem('usuario') || '{}'
   );
-  private clientesObras: clientesObras[] = [];
+  private codCli: codCli = {
+    codCli: '',
+  };
 
   constructor(private http: HttpClient, private router: Router) {
     if (!this.usuario) {
       router.navigate(['/login']);
     } else {
-      this.clientesObras = this.usuario.properties.map((item) => {
-        const { name, value } = item;
+      this.usuario.properties.forEach((propriedade) => {
+        const { name, value } = propriedade;
 
-        if (value.toLowerCase() == 'todas') {
-          return {
-            clienteObra: item.name,
-          };
-        } else {
-          return {
-            clienteObra: `${name}-${value}`,
+        if (name.toLowerCase() === 'codcli') {
+          this.codCli = {
+            codCli: value,
           };
         }
       });
@@ -37,17 +36,15 @@ export class NotasService {
   }
 
   exportaNotas(): Observable<exportaNotas> {
-    const body = {
-      clientesObras: this.clientesObras,
-    };
+    const body = this.codCli;
 
     return this.http.post<exportaNotas>(
-      'https://concresuper.prismainformatica.com.br:8181/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal&port=ExportaNotas&useAlwaysArray=true',
+      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaNotas&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'integracao.portal',
-          pass: 'ConCrEp0Rt@l',
+          user: 'suporte',
+          pass: '@98fm',
           encryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
@@ -65,14 +62,14 @@ export class NotasService {
     };
 
     return this.http.post<baixarNotas>(
-      'https://concresuper.prismainformatica.com.br:8181/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal&port=BaixarDanfse&useAlwaysArray=true',
+      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=BaixarDanfe&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'integracao.portal',
-          pass: 'ConCrEp0Rt@l',
+          user: 'suporte',
           encryptionType: '0',
           Authorization: '',
+          pass: '@98fm',
           'Content-Type': 'application/json',
         },
       }

@@ -1,11 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import Usuario from '../types/Usuario';
-import { clientesObras } from './inicio.service';
 import { Router } from '@angular/router';
-import ExportaTitulos, { Titulo } from '../types/exportaTitulos';
 import { Observable } from 'rxjs';
+
 import baixarTitulos from '../types/baixarTitulos';
+import ExportaTitulos, { Titulo } from '../types/exportaTitulos';
+import Usuario from '../types/Usuario';
+import { codCli } from './inicio.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,22 +15,20 @@ export class BoletosService {
   private usuario: Usuario = JSON.parse(
     sessionStorage.getItem('usuario') || '{}'
   );
-  private clientesObras: clientesObras[] = [];
+  private codCli: codCli = {
+    codCli: '',
+  };
 
   constructor(private http: HttpClient, private router: Router) {
     if (!this.usuario) {
       router.navigate(['/login']);
     } else {
-      this.clientesObras = this.usuario.properties.map((item) => {
-        const { name, value } = item;
+      this.usuario.properties.forEach((propriedade) => {
+        const { name, value } = propriedade;
 
-        if (value.toLowerCase() == 'todas') {
-          return {
-            clienteObra: item.name,
-          };
-        } else {
-          return {
-            clienteObra: `${name}-${value}`,
+        if (name.toLowerCase() === 'codcli') {
+          this.codCli = {
+            codCli: value,
           };
         }
       });
@@ -37,17 +36,15 @@ export class BoletosService {
   }
 
   exportaTitulos(): Observable<ExportaTitulos> {
-    const body = {
-      clientesObras: this.clientesObras,
-    };
+    const body = this.codCli;
 
     return this.http.post<ExportaTitulos>(
-      'https://concresuper.prismainformatica.com.br:8181/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal&port=ExportaTitulos&useAlwaysArray=true',
+      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaTitulos&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'integracao.portal',
-          pass: 'ConCrEp0Rt@l',
+          user: 'suporte',
+          pass: '@98fm',
           encryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
@@ -65,13 +62,13 @@ export class BoletosService {
     };
 
     return this.http.post<baixarTitulos>(
-      'https://concresuper.prismainformatica.com.br:8181/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal&port=BaixarBoleto&useAlwaysArray=true',
+      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=BaixarBoleto&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'integracao.portal',
-          pass: 'ConCrEp0Rt@l',
-          encryptionType: '0',
+          user: 'suporte',
+          pass: '@98fm',
+          EncryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
         },

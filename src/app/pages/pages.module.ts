@@ -18,7 +18,6 @@ import { ToastModule } from 'primeng/toast';
 import { ComponentsModule } from '../components/components.module';
 import { BoletosComponent } from './dashboard/boletos/boletos.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { FaturasComponent } from './dashboard/faturas/faturas.component';
 import { InicioComponent } from './dashboard/inicio/inicio.component';
 import { NotasComponent } from './dashboard/notas/notas.component';
 import { LoginComponent } from './login/login.component';
@@ -30,7 +29,6 @@ import { PagesRoutingModule } from './pages-routing.module';
     DashboardComponent,
     InicioComponent,
     BoletosComponent,
-    FaturasComponent,
     NotasComponent,
   ],
   imports: [

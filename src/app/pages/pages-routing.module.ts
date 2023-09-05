@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { BoletosComponent } from './dashboard/boletos/boletos.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
-import { FaturasComponent } from './dashboard/faturas/faturas.component';
 import { InicioComponent } from './dashboard/inicio/inicio.component';
 import { NotasComponent } from './dashboard/notas/notas.component';
 import { LoginComponent } from './login/login.component';
@@ -43,10 +42,6 @@ const routes: Routes = [
       {
         path: 'boletos',
         component: BoletosComponent,
-      },
-      {
-        path: 'faturas',
-        component: FaturasComponent,
       },
       {
         path: 'notas-fiscais',

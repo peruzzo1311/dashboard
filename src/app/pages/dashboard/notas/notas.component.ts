@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MessageService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
+import { Subscription } from 'rxjs';
 import { NotasService } from 'src/app/services/notas.service';
 import { Nota } from 'src/app/types/exportaNotas';
 
@@ -18,6 +19,9 @@ export class NotasComponent {
   notasSelecionadas: Nota[] = [];
   valorInput: string = '';
 
+  exportaNotas$!: Subscription;
+  baixarNotas$!: Subscription;
+
   constructor(
     private notasService: NotasService,
     private messageService: MessageService
@@ -26,12 +30,10 @@ export class NotasComponent {
   }
 
   exportaNotas() {
-    this.notasService.exportaNotas().subscribe((data) => {
+    this.exportaNotas$ = this.notasService.exportaNotas().subscribe((data) => {
       if (data.codRet === 0) {
         this.notas = data.notas;
         this.totalRegistros = data.notas.length;
-
-        console.log(this.notas);
       } else {
         this.mensagemErro(data.msgRet);
       }
@@ -43,27 +45,30 @@ export class NotasComponent {
   baixarNotas(nota: Nota) {
     nota.baixando = true;
 
-    this.notasService.baixarNotas(nota).subscribe((data) => {
-      if (data.codRet === 0) {
-        this.base64ParaPdf(data.pdfNfs, `Nota_${nota.numNfv}`);
-      } else {
-        this.mensagemErro(data.msgRet);
-      }
+    this.baixarNotas$ = this.notasService
+      .baixarNotas(nota)
+      .subscribe((data) => {
+        if (data.codRet === 0) {
+          this.base64ParaPdf(data.pdfNfe, `Nota_${nota.numNfv}`);
+        } else {
+          this.mensagemErro(data.msgRet);
+        }
 
-      nota.baixando = false;
-    });
+        nota.baixando = false;
+      });
   }
 
   baixarMultiplasNotas() {
-    if (this.notasSelecionadas.length === 0) {
-      this.mensagemErro('Nenhuma nota selecionada!');
+    // if (this.notasSelecionadas.length === 0) {
+    //   this.mensagemErro('Nenhuma nota selecionada!');
 
-      return;
-    } else {
-      this.notasSelecionadas.forEach((nota) => {
-        this.baixarNotas(nota);
-      });
-    }
+    //   return;
+    // } else {
+    //   this.notasSelecionadas.forEach((nota) => {
+    //     this.baixarNotas(nota);
+    //   });
+    // }
+    console.log(this.notasSelecionadas);
   }
 
   base64ParaPdf(base64: string, fileName: string) {
@@ -138,5 +143,15 @@ export class NotasComponent {
 
   clear(table: Table) {
     table.clear();
+  }
+
+  ngOnDestroy() {
+    if (this.exportaNotas$) {
+      this.exportaNotas$.unsubscribe();
+    }
+
+    if (this.baixarNotas$) {
+      this.baixarNotas$.unsubscribe();
+    }
   }
 }

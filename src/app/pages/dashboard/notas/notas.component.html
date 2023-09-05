@@ -13,7 +13,7 @@
       loadingIcon="pi pi-spin pi-spinner"
       (sortFunction)="ordenar($event)"
       [customSort]="true"
-      dataKey="numNff"
+      dataKey="numNfv"
       [globalFilterFields]="['numNfv', 'nomCli', 'desObr', 'datAut']"
     >
       <ng-template pTemplate="caption">
@@ -67,9 +67,6 @@
           <th pSortableColumn="nomCli">
             Cliente <p-sortIcon field="nomCli"> </p-sortIcon>
           </th>
-          <th pSortableColumn="desObr">
-            Obra <p-sortIcon field="desObr"> </p-sortIcon>
-          </th>
           <th pSortableColumn="datAut">
             Data <p-sortIcon field="datAut"> </p-sortIcon>
           </th>
@@ -84,7 +81,6 @@
           </td>
           <td>{{ nota.numNfv }}</td>
           <td>{{ nota.nomCli }}</td>
-          <td>{{ nota.desObr }}</td>
           <td>{{ nota.datAut }}</td>
           <td class="flex justify-content-center">
             <i
