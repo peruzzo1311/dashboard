@@ -59,16 +59,15 @@ export class NotasComponent {
   }
 
   baixarMultiplasNotas() {
-    // if (this.notasSelecionadas.length === 0) {
-    //   this.mensagemErro('Nenhuma nota selecionada!');
+    if (this.notasSelecionadas.length === 0) {
+      this.mensagemErro('Nenhuma nota selecionada!');
 
-    //   return;
-    // } else {
-    //   this.notasSelecionadas.forEach((nota) => {
-    //     this.baixarNotas(nota);
-    //   });
-    // }
-    console.log(this.notasSelecionadas);
+      return;
+    } else {
+      this.notasSelecionadas.forEach((nota) => {
+        this.baixarNotas(nota);
+      });
+    }
   }
 
   base64ParaPdf(base64: string, fileName: string) {
@@ -143,6 +142,15 @@ export class NotasComponent {
 
   clear(table: Table) {
     table.clear();
+  }
+
+  currencyFormatter(valor: number): string {
+    const valorFormatado = valor.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+
+    return valorFormatado;
   }
 
   ngOnDestroy() {

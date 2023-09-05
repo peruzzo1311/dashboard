@@ -33,15 +33,39 @@
   class="grid grid-nogutter mt-4 justify-content-between"
   *ngIf="!carregando"
 >
-  <div class="col-12 lg:col-7 pr-2">
+  <div class="col-12 lg:col-6 pr-2">
     <p-card class="fadein animation-duration-1000 animation-ease-out graphCard">
+      <span class="text-xl font-medium text-800">
+        Contas a pagar nos próximos 6 dias
+      </span>
+
+      <div class="mt-4">
+        <p-chart
+          type="bar"
+          [data]="datasetContasPagar"
+          [options]="options"
+        ></p-chart>
+      </div>
     </p-card>
   </div>
 
-  <div
-    class="col-12 lg:col-5 fadein animation-duration-1000 animation-ease-out pl-2"
-  >
+  <div class="col-12 lg:col-6 pl-2">
     <p-card class="fadein animation-duration-1000 animation-ease-out graphCard">
+      <p-table [value]="contasPagarPeriodo">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>Período</th>
+            <th>Valor</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-contas>
+          <tr>
+            <td>{{ contas.label }}</td>
+            <td>{{ currencyFormatter(contas.value) }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
     </p-card>
   </div>
 </div>
@@ -51,20 +75,18 @@
     <div class="col">
       <p-skeleton width="100%" height="6rem" />
     </div>
+
     <div class="col"><p-skeleton width="100%" height="6rem" /></div>
+
     <div class="col"><p-skeleton width="100%" height="6rem" /></div>
   </div>
 
   <div class="grid grid-nogutter mt-4 justify-content-between">
-    <div
-      class="col-12 lg:col-7 fadein animation-duration-1000 animation-ease-out pr-2"
-    >
+    <div class="col-12 lg:col-6 pr-2">
       <p-skeleton width="100%" height="25rem" />
     </div>
 
-    <div
-      class="col-12 lg:col-5 fadein animation-duration-1000 animation-ease-out pl-2"
-    >
+    <div class="col-12 lg:col-6 pl-2">
       <p-skeleton width="100%" height="25rem" />
     </div>
   </div>

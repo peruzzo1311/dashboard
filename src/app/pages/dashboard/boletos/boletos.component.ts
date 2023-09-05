@@ -146,6 +146,15 @@ export class BoletosComponent {
     table.clear();
   }
 
+  currencyFormatter(valor: number): string {
+    const valorFormatado = valor.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+
+    return valorFormatado;
+  }
+
   ngOnDestroy() {
     if (this.exportaTitulos$) {
       this.exportaTitulos$.unsubscribe();

@@ -95,4 +95,26 @@ export class InicioService {
       }
     );
   }
+
+  ContasPagarPeriodo(): Observable<ContasPagar> {
+    const body = {
+      context: {
+        PREVENT_DATASET_EXCEPTION: true,
+      },
+      displayBlock: false,
+      filters: [],
+      id: 'dataset://factory/default/erpxt/analytics/financial_pay_future',
+    };
+
+    return this.http.post<ContasPagar>(
+      'https://platform.senior.com.br/t/senior.com.br/bridge/1.0/rest/platform/dataset/queries/executeDataset',
+      body,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: this.usuario.token,
+        },
+      }
+    );
+  }
 }
