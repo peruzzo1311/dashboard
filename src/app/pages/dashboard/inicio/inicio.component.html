@@ -51,21 +51,27 @@
 
   <div class="col-12 lg:col-6 pl-2">
     <p-card class="fadein animation-duration-1000 animation-ease-out graphCard">
-      <p-table [value]="contasPagarPeriodo">
-        <ng-template pTemplate="header">
-          <tr>
-            <th>Período</th>
-            <th>Valor</th>
-          </tr>
-        </ng-template>
+      <span class="text-xl font-medium text-800">
+        Contas a pagar nos próximos 6 dias
+      </span>
 
-        <ng-template pTemplate="body" let-contas>
-          <tr>
-            <td>{{ contas.label }}</td>
-            <td>{{ currencyFormatter(contas.value) }}</td>
-          </tr>
-        </ng-template>
-      </p-table>
+      <div class="mt-4">
+        <p-table [value]="contasPagarPeriodo">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>Período</th>
+              <th>Valor</th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-contas>
+            <tr>
+              <td>{{ contas.label }}</td>
+              <td>{{ currencyFormatter(contas.value) }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
     </p-card>
   </div>
 </div>
