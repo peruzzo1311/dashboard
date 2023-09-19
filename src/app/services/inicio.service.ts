@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import ContasPagar from '../types/ContasPagar';
+
+import { ExportaPagamentos } from '../types/ExportaPagamentos';
+import ExportaPagamentosPeriodo from '../types/ExportaPagamentosPeriodo';
 import Usuario from '../types/Usuario';
 import ConsultaValorFaturadoMes from '../types/consultaValorFaturadoMes';
 import consultaValorFaturadoMesAnterior from '../types/consultaValorFaturadoMesAnterior';
@@ -74,45 +76,37 @@ export class InicioService {
     );
   }
 
-  ContasPagar(): Observable<ContasPagar> {
-    const body = {
-      context: {
-        PREVENT_DATASET_EXCEPTION: true,
-      },
-      displayBlock: false,
-      filters: [],
-      id: 'dataset://factory/default/erpxt/analytics/financial_pay_graph',
-    };
+  ExportaPagamentos(): Observable<ExportaPagamentos> {
+    const body = this.codCli;
 
-    return this.http.post<ContasPagar>(
-      'https://platform.senior.com.br/t/senior.com.br/bridge/1.0/rest/platform/dataset/queries/executeDataset',
+    return this.http.post<ExportaPagamentos>(
+      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaPagamentos6&useAlwaysArray=true',
       body,
       {
         headers: {
+          user: 'suporte',
+          pass: '@98fm',
+          EncryptionType: '0',
+          Authorization: '',
           'Content-Type': 'application/json',
-          Authorization: this.usuario.token,
         },
       }
     );
   }
 
-  ContasPagarPeriodo(): Observable<ContasPagar> {
-    const body = {
-      context: {
-        PREVENT_DATASET_EXCEPTION: true,
-      },
-      displayBlock: false,
-      filters: [],
-      id: 'dataset://factory/default/erpxt/analytics/financial_pay_future',
-    };
+  ExportaPagamentosPeriodo(): Observable<ExportaPagamentosPeriodo> {
+    const body = this.codCli;
 
-    return this.http.post<ContasPagar>(
-      'https://platform.senior.com.br/t/senior.com.br/bridge/1.0/rest/platform/dataset/queries/executeDataset',
+    return this.http.post<ExportaPagamentosPeriodo>(
+      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaPagamentosPeriodo&useAlwaysArray=true',
       body,
       {
         headers: {
+          user: 'suporte',
+          pass: '@98fm',
+          EncryptionType: '0',
+          Authorization: '',
           'Content-Type': 'application/json',
-          Authorization: this.usuario.token,
         },
       }
     );

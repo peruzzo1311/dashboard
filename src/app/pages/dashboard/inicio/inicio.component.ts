@@ -28,13 +28,16 @@ export interface DadosGraficoBarras {
 export class InicioComponent {
   cards: Card[] = [];
   contasPagarPeriodo: ContasPagarPeriodo[] = [];
-  carregando = true;
+  carregandoCards = true;
+  carregandoGraficos = true;
 
   datasetContasPagar = {};
   options = {};
 
   consultaContasPagar$!: Subscription;
   consultaContasPagarPeriodo$!: Subscription;
+  exportapagamentos$!: Subscription;
+  exportapagamentosperiodo$!: Subscription;
 
   constructor(
     private inicioService: InicioService,
@@ -49,6 +52,7 @@ export class InicioComponent {
         },
       },
     };
+
     this.getGraphs();
   }
 
@@ -67,7 +71,7 @@ export class InicioComponent {
         }
       },
       error: (err) => this.mensagemErro(err.error.message),
-      complete: () => (this.carregando = false),
+      complete: () => (this.carregandoCards = false),
     });
   }
 
@@ -128,50 +132,69 @@ export class InicioComponent {
   }
 
   getGraphs() {
-    this.carregando = true;
-
-    const labels: string[] = [];
-    const values: string[] = [];
-
-    this.consultaContasPagar$ = this.inicioService.ContasPagar().subscribe({
-      next: (data) => {
-        for (let row of data.rows) {
-          labels.push(row.columns[1]);
-          values.push(row.columns[2]);
-        }
-
-        this.datasetContasPagar = {
-          labels: labels,
-          datasets: [
-            {
-              data: values,
-              backgroundColor: '#0171BB',
-            },
-          ],
-        };
-
-        this.carregando = false;
-      },
-      error: (err) => console.log(err.error.message),
-      complete: () => (this.carregando = false),
+    const results = forkJoin({
+      consultaContasPagar: this.ConsultaContasPagar(),
+      consultaContasPagarPeriodo: this.ConsultaContasPagarPeriodo(),
     });
 
-    this.consultaContasPagarPeriodo$ = this.inicioService
-      .ContasPagarPeriodo()
-      .subscribe({
-        next: (data) => {
-          data.rows.forEach((row) => {
-            this.contasPagarPeriodo.push({
-              label: row.columns[0],
-              value: Number(row.columns[1]),
-            });
-          });
+    results.subscribe({
+      next: (values: any) => {
+        this.datasetContasPagar = values.consultaContasPagar;
+        this.contasPagarPeriodo = values.consultaContasPagarPeriodo;
+      },
+      error: (err) => this.mensagemErro(err.error.message),
+      complete: () => (this.carregandoGraficos = false),
+    });
+  }
 
-          console.log(this.contasPagarPeriodo);
-        },
-        error: (err) => console.log(err.error.message),
-        complete: () => (this.carregando = false),
-      });
+  ConsultaContasPagar() {
+    return this.inicioService.ExportaPagamentos().pipe(
+      map((data) => {
+        if (data.codRet === 0) {
+          const labels = data.titulo.map((titulo) => {
+            return titulo.vctPro;
+          });
+          const datasets = [
+            {
+              data: data.titulo.map((titulo) => titulo.vlrAbe ?? 0),
+              backgroundColor: data.titulo.map((titulo) =>
+                this.generateRandomColor()
+              ),
+            },
+          ];
+
+          console.log(datasets);
+
+          return { labels, datasets };
+        } else {
+          this.mensagemErro(data.msgRet);
+
+          return {
+            labels: [],
+            datasets: [],
+          };
+        }
+      })
+    );
+  }
+
+  ConsultaContasPagarPeriodo() {
+    return this.inicioService.ExportaPagamentosPeriodo().pipe(
+      map((data) => {
+        if (data.codRet === 0) {
+          return data.periodo.map((periodo) => {
+            return {
+              label: periodo.descricao,
+              value: periodo.vlrAbe,
+            };
+          });
+        } else {
+          this.mensagemErro(data.msgRet);
+
+          return [];
+        }
+      })
+    );
   }
 
   mensagemErro(mensagem: string) {
