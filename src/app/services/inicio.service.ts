@@ -44,12 +44,12 @@ export class InicioService {
     const body = this.codCli;
 
     return this.http.post<consultaValorFaturadoMesAnterior>(
-      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaFaturasMesAnterior&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaFaturasMesAnterior&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'suporte',
-          pass: '@98fm',
+          user: 'joao.dayko',
+          pass: '102030',
           EncryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
@@ -62,12 +62,12 @@ export class InicioService {
     const body = this.codCli;
 
     return this.http.post<ConsultaValorFaturadoMes>(
-      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaFaturasMesAtual&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaFaturasMesAtual&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'suporte',
-          pass: '@98fm',
+          user: 'joao.dayko',
+          pass: '102030',
           EncryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
@@ -80,12 +80,12 @@ export class InicioService {
     const body = this.codCli;
 
     return this.http.post<ExportaPagamentos>(
-      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaPagamentos6&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaPagamentos6&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'suporte',
-          pass: '@98fm',
+          user: 'joao.dayko',
+          pass: '102030',
           EncryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
@@ -98,12 +98,12 @@ export class InicioService {
     const body = this.codCli;
 
     return this.http.post<ExportaPagamentosPeriodo>(
-      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaPagamentosPeriodo&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaPagamentosPeriodo&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'suporte',
-          pass: '@98fm',
+          user: 'joao.dayko',
+          pass: '102030',
           EncryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',

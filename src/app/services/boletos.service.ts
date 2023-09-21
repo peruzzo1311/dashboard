@@ -39,12 +39,12 @@ export class BoletosService {
     const body = this.codCli;
 
     return this.http.post<ExportaTitulos>(
-      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaTitulos&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaTitulos&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'suporte',
-          pass: '@98fm',
+          user: 'joao.dayko',
+          pass: '102030',
           encryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
@@ -62,12 +62,12 @@ export class BoletosService {
     };
 
     return this.http.post<baixarTitulos>(
-      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=BaixarBoleto&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=BaixarBoleto&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'suporte',
-          pass: '@98fm',
+          user: 'joao.dayko',
+          pass: '102030',
           EncryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',

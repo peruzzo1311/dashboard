@@ -39,12 +39,12 @@ export class NotasService {
     const body = this.codCli;
 
     return this.http.post<exportaNotas>(
-      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=ExportaNotas&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaNotas&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'suporte',
-          pass: '@98fm',
+          user: 'joao.dayko',
+          pass: '102030',
           encryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
@@ -62,14 +62,14 @@ export class NotasService {
     };
 
     return this.http.post<baixarNotas>(
-      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=BaixarDanfe&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=BaixarDanfe&useAlwaysArray=true',
       body,
       {
         headers: {
-          user: 'suporte',
+          user: 'joao.dayko',
           encryptionType: '0',
           Authorization: '',
-          pass: '@98fm',
+          pass: '102030',
           'Content-Type': 'application/json',
         },
       }
