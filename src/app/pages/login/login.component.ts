@@ -1,10 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormControl, NgForm, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { LoginService } from 'src/app/services/login.service';
-import Usuario from 'src/app/types/Usuario';
+import { Usuario, UsuarioRegistro } from 'src/app/types/Usuario';
 
 @Component({
   selector: 'app-login',
@@ -13,11 +13,36 @@ import Usuario from 'src/app/types/Usuario';
   providers: [LoginService, MessageService],
 })
 export class LoginComponent {
-  @ViewChild('formulario') formulario!: NgForm;
-
   title = 'dashboard';
-  mostrarSenha = false;
   carregando = false;
+  mostrarSenha = false;
+
+  //modal registro
+  formulario!: NgForm;
+  tipoDocumento: 'CPF' | 'CNPJ' = 'CPF';
+  documento: string = '';
+  emailRegistro: string = '';
+  codCli: number = 0;
+  documentoVerificado = false;
+  validandoDocumento = false;
+  mostrarMenuRegistro = false;
+  mostrarSenhaRegistro = false;
+  mostrarConfirmarSenha = false;
+  usuarioCriado = false;
+
+  formularioCadastro = this.fb.group({
+    nome: new FormControl('', Validators.required),
+    sobrenome: new FormControl('', Validators.required),
+    senhaRegistro: new FormControl('', [
+      Validators.required,
+      Validators.minLength(6),
+      Validators.maxLength(20),
+      Validators.pattern(
+        '^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$'
+      ),
+    ]),
+    confirmarSenha: new FormControl('', [Validators.required]),
+  });
 
   login$!: Subscription;
   getUser$!: Subscription;
@@ -25,7 +50,8 @@ export class LoginComponent {
   constructor(
     private loginService: LoginService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private fb: FormBuilder
   ) {
     if (sessionStorage.getItem('usuario')) {
       this.router.navigate(['/dashboard']);
@@ -34,6 +60,74 @@ export class LoginComponent {
 
   toggleMostrarSenha() {
     this.mostrarSenha = !this.mostrarSenha;
+  }
+
+  fecharMenuRegistro() {
+    this.mostrarMenuRegistro = false;
+
+    this.documento = '';
+    this.emailRegistro = '';
+    this.codCli = 0;
+    this.documentoVerificado = false;
+    this.validandoDocumento = false;
+    this.tipoDocumento = 'CPF';
+    this.usuarioCriado = false;
+    this.formularioCadastro.reset();
+  }
+
+  verificarDocumento() {
+    const documento = this.documento.replace(/\D/g, '');
+    const tipoDocumento = this.tipoDocumento === 'CPF' ? 'F' : 'J';
+
+    if (documento && this.emailRegistro) {
+      this.validandoDocumento = true;
+
+      this.loginService.validarDocumento(documento, tipoDocumento).subscribe({
+        next: (res) => {
+          if (res.codRet === 0) {
+            this.codCli = res.codCli;
+
+            this.documentoVerificado = true;
+          } else {
+            this.mensagemErro(res.msgRet);
+          }
+        },
+        error: (err) => {
+          this.mensagemErro(
+            'Serviço indisponível, tente novamente mais tarde!'
+          );
+        },
+        complete: () => (this.validandoDocumento = false),
+      });
+    } else {
+      this.mensagemErro('Preencha os campos corretamente!');
+    }
+  }
+
+  formSubmit() {
+    const usuarioRegistro: UsuarioRegistro = {
+      nome: this.nome?.value,
+      sobrenome: this.sobrenome?.value,
+      email: this.emailRegistro,
+      senha: this.senhaRegistro?.value,
+      codCli: this.codCli,
+      documento: this.documento,
+      token: '',
+    };
+
+    this.loginService.createUser(usuarioRegistro).subscribe({
+      next: (res) => {},
+      error: (err) => {
+        if (err.error.message) {
+          this.mensagemErro(err.error.message);
+        } else {
+          this.mensagemErro(
+            'Serviço indisponível, tente novamente mais tarde!'
+          );
+        }
+      },
+      complete: () => (this.carregando = false),
+    });
   }
 
   entrar(usuario: string, senha: string) {
@@ -82,6 +176,22 @@ export class LoginComponent {
     });
 
     this.carregando = false;
+  }
+
+  get nome() {
+    return this.formularioCadastro.get('nome');
+  }
+
+  get sobrenome() {
+    return this.formularioCadastro.get('sobrenome');
+  }
+
+  get senhaRegistro() {
+    return this.formularioCadastro.get('senhaRegistro');
+  }
+
+  get confirmarSenha() {
+    return this.formularioCadastro.get('confirmarSenha');
   }
 
   mensagemErro(mensagem: string) {

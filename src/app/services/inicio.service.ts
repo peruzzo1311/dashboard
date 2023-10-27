@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 
 import { ExportaPagamentos } from '../types/ExportaPagamentos';
 import ExportaPagamentosPeriodo from '../types/ExportaPagamentosPeriodo';
-import Usuario from '../types/Usuario';
+import { Usuario } from '../types/Usuario';
 import ConsultaValorFaturadoMes from '../types/consultaValorFaturadoMes';
 import consultaValorFaturadoMesAnterior from '../types/consultaValorFaturadoMesAnterior';
 
@@ -26,7 +26,7 @@ export class InicioService {
 
   constructor(private http: HttpClient, private router: Router) {
     if (!this.usuario) {
-      router.navigate(['/login']);
+      router.navigate(['login']);
     } else {
       this.usuario.properties.forEach((propriedade) => {
         const { name, value } = propriedade;

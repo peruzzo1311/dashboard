@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
+import { Usuario } from '../types/Usuario';
 import baixarNotas from '../types/baixarNotas';
 import exportaNotas, { Nota } from '../types/exportaNotas';
-import Usuario from '../types/Usuario';
 import { codCli } from './inicio.service';
 
 @Injectable({
@@ -21,7 +21,7 @@ export class NotasService {
 
   constructor(private http: HttpClient, private router: Router) {
     if (!this.usuario) {
-      router.navigate(['/login']);
+      router.navigate(['login']);
     } else {
       this.usuario.properties.forEach((propriedade) => {
         const { name, value } = propriedade;

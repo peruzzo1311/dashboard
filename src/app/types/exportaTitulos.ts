@@ -20,5 +20,6 @@ export interface Titulo {
   codTpt: string;
   vctOri: string;
   nomFil: string;
+  cartorio: string;
   baixando?: boolean;
 }

@@ -3,9 +3,9 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
+import { Usuario } from '../types/Usuario';
 import baixarTitulos from '../types/baixarTitulos';
 import ExportaTitulos, { Titulo } from '../types/exportaTitulos';
-import Usuario from '../types/Usuario';
 import { codCli } from './inicio.service';
 
 @Injectable({
@@ -21,7 +21,7 @@ export class BoletosService {
 
   constructor(private http: HttpClient, private router: Router) {
     if (!this.usuario) {
-      router.navigate(['/login']);
+      router.navigate(['login']);
     } else {
       this.usuario.properties.forEach((propriedade) => {
         const { name, value } = propriedade;
@@ -39,7 +39,7 @@ export class BoletosService {
     const body = this.codCli;
 
     return this.http.post<ExportaTitulos>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaTitulos&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&port=ExportaTitulos&useAlwaysArray=true&service=com.prisma.portal.faturas',
       body,
       {
         headers: {

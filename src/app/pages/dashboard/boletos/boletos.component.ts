@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import * as JSZip from 'jszip';
 import { MessageService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { BoletosService } from 'src/app/services/boletos.service';
 import { Titulo } from 'src/app/types/exportaTitulos';
 
@@ -18,6 +19,7 @@ export class BoletosComponent {
   totalRegistros: number = 0;
   carregando: boolean = true;
   valorInput: string = '';
+  baixandoMultiplosBoletos: boolean = false;
 
   exportaTitulos$!: Subscription;
   baixarTitulos$!: Subscription;
@@ -30,9 +32,8 @@ export class BoletosComponent {
   }
 
   exportaTitulos() {
-    this.exportaTitulos$ = this.boletosService
-      .exportaTitulos()
-      .subscribe((data) => {
+    this.exportaTitulos$ = this.boletosService.exportaTitulos().subscribe({
+      next: (data) => {
         if (data.codRet === 0) {
           this.boletos = data.titulos;
           this.totalRegistros = this.boletos.length;
@@ -41,15 +42,25 @@ export class BoletosComponent {
         }
 
         this.carregando = false;
-      });
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+      },
+      complete: () => {
+        this.carregando = false;
+      },
+    });
   }
 
   baixarTitulos(boleto: Titulo) {
     boleto.baixando = true;
 
-    this.baixarTitulos$ = this.boletosService
-      .baixarTitulos(boleto)
-      .subscribe((data) => {
+    this.baixarTitulos$ = this.boletosService.baixarTitulos(boleto).subscribe({
+      next: (data) => {
         if (data.codRet === 0) {
           this.base64ParaPdf(data.pdfBol, `boleto_${boleto.numTit}.pdf`);
         } else {
@@ -57,19 +68,62 @@ export class BoletosComponent {
         }
 
         boleto.baixando = false;
-      });
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+      },
+      complete: () => {
+        this.carregando = false;
+      },
+    });
   }
 
   baixarMultiplosTitulos() {
-    if (this.boletosSelecionados.length === 0) {
-      this.mensagemErro('Nenhum título selecionado!');
+    this.carregando = true;
+    const zip = new JSZip();
+    const requests = [];
 
-      return;
-    } else {
-      this.boletosSelecionados.forEach((boleto) => {
-        this.baixarTitulos(boleto);
-      });
+    for (let boleto of this.boletosSelecionados) {
+      requests.push(this.boletosService.baixarTitulos(boleto));
     }
+
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        responses.forEach((data, index) => {
+          const boleto = this.boletosSelecionados[index];
+
+          if (data && data.pdfBol) {
+            zip.file(`boleto_${boleto.numTit}.pdf`, data.pdfBol, {
+              base64: true,
+            });
+          } else {
+            this.mensagemErro('Erro ao baixar boleto.');
+          }
+        });
+
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+          const link = document.createElement('a');
+
+          link.href = URL.createObjectURL(content);
+          link.download = 'boletos.zip';
+          link.click();
+        });
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+      },
+      complete: () => {
+        this.carregando = false;
+      },
+    });
   }
 
   base64ParaPdf(base64: string, fileName: string) {

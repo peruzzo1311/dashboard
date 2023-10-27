@@ -8,8 +8,11 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
 import { FocusTrapModule } from 'primeng/focustrap';
+import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { RippleModule } from 'primeng/ripple';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
@@ -50,6 +53,9 @@ import { PagesRoutingModule } from './pages-routing.module';
     ChartModule,
     SkeletonModule,
     TableModule,
+    DialogModule,
+    InputMaskModule,
+    RadioButtonModule,
   ],
 })
 export class PagesModule {}

@@ -1,5 +1,5 @@
 <div
-  class="grid grid-nogutter gap-4 justify-content-center"
+  class="grid grid-nogutter gap-4 justify-content-center slide-in-left"
   *ngIf="!carregandoCards; else skeletonCards"
 >
   <div class="col" *ngFor="let card of cards">
@@ -30,7 +30,7 @@
 </div>
 
 <div
-  class="grid grid-nogutter mt-4 justify-content-between"
+  class="grid grid-nogutter mt-4 justify-content-between slide-in-left"
   *ngIf="!carregandoGraficos; else skeletonGraficos"
 >
   <div class="col-12 lg:col-6 pr-2">
@@ -52,7 +52,7 @@
   <div class="col-12 lg:col-6 pl-2">
     <p-card class="fadein animation-duration-1000 animation-ease-out graphCard">
       <span class="text-xl font-medium text-800">
-        Contas a pagar nos próximos 6 dias
+        Contas a pagar por período
       </span>
 
       <div class="mt-4">

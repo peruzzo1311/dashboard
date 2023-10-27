@@ -70,7 +70,15 @@ export class InicioComponent {
           this.cards.push(card);
         }
       },
-      error: (err) => this.mensagemErro(err.error.message),
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+
+          console.log(err);
+        }
+      },
       complete: () => (this.carregandoCards = false),
     });
   }
@@ -142,7 +150,13 @@ export class InicioComponent {
         this.datasetContasPagar = values.consultaContasPagar;
         this.contasPagarPeriodo = values.consultaContasPagarPeriodo;
       },
-      error: (err) => this.mensagemErro(err.error.message),
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+      },
       complete: () => (this.carregandoGraficos = false),
     });
   }
@@ -162,8 +176,6 @@ export class InicioComponent {
               ),
             },
           ];
-
-          console.log(datasets);
 
           return { labels, datasets };
         } else {
@@ -228,6 +240,18 @@ export class InicioComponent {
   ngOnDestroy() {
     if (this.consultaContasPagar$) {
       this.consultaContasPagar$.unsubscribe();
+    }
+
+    if (this.consultaContasPagarPeriodo$) {
+      this.consultaContasPagarPeriodo$.unsubscribe();
+    }
+
+    if (this.exportapagamentos$) {
+      this.exportapagamentos$.unsubscribe();
+    }
+
+    if (this.exportapagamentosperiodo$) {
+      this.exportapagamentosperiodo$.unsubscribe();
     }
   }
 }

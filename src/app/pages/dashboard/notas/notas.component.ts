@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import * as JSZip from 'jszip';
 import { MessageService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { NotasService } from 'src/app/services/notas.service';
 import { Nota } from 'src/app/types/exportaNotas';
 
@@ -30,44 +31,96 @@ export class NotasComponent {
   }
 
   exportaNotas() {
-    this.exportaNotas$ = this.notasService.exportaNotas().subscribe((data) => {
-      if (data.codRet === 0) {
-        this.notas = data.notas;
-        this.totalRegistros = data.notas.length;
-      } else {
-        this.mensagemErro(data.msgRet);
-      }
+    this.exportaNotas$ = this.notasService.exportaNotas().subscribe(
+      (data) => {
+        if (data.codRet === 0) {
+          this.notas = data.notas;
+          this.totalRegistros = this.notas.length;
+        } else {
+          this.mensagemErro(data.msgRet);
+        }
 
-      this.carregando = false;
-    });
+        this.carregando = false;
+      },
+      (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+      },
+      () => {
+        this.carregando = false;
+      }
+    );
   }
 
   baixarNotas(nota: Nota) {
     nota.baixando = true;
 
-    this.baixarNotas$ = this.notasService
-      .baixarNotas(nota)
-      .subscribe((data) => {
+    this.baixarNotas$ = this.notasService.baixarNotas(nota).subscribe({
+      next: (data) => {
         if (data.codRet === 0) {
-          this.base64ParaPdf(data.pdfNfe, `Nota_${nota.numNfv}`);
+          this.base64ParaPdf(data.pdfNfe, `nota_${nota.numNfv}.pdf`);
         } else {
           this.mensagemErro(data.msgRet);
         }
-
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+      },
+      complete: () => {
         nota.baixando = false;
-      });
+      },
+    });
   }
 
   baixarMultiplasNotas() {
-    if (this.notasSelecionadas.length === 0) {
-      this.mensagemErro('Nenhuma nota selecionada!');
+    this.carregando = true;
+    const zip = new JSZip();
+    const requests = [];
 
-      return;
-    } else {
-      this.notasSelecionadas.forEach((nota) => {
-        this.baixarNotas(nota);
-      });
+    for (let nota of this.notasSelecionadas) {
+      requests.push(this.notasService.baixarNotas(nota));
     }
+
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        responses.forEach((data, index) => {
+          const nota = this.notasSelecionadas[index];
+
+          if (data && data.pdfNfe) {
+            zip.file(`nota_${nota.numNfv}.pdf`, data.pdfNfe, {
+              base64: true,
+            });
+          } else {
+            this.mensagemErro('Erro ao baixar nota.');
+          }
+        });
+
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+          const link = document.createElement('a');
+
+          link.href = URL.createObjectURL(content);
+          link.download = 'notas.zip';
+          link.click();
+        });
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+      },
+      complete: () => {
+        this.carregando = false;
+      },
+    });
   }
 
   base64ParaPdf(base64: string, fileName: string) {

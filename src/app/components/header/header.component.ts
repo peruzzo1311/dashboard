@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ThemeService } from 'src/app/services/theme.service';
-import Usuario from 'src/app/types/Usuario';
+import { Usuario } from 'src/app/types/Usuario';
 
 @Component({
   selector: 'app-header',
