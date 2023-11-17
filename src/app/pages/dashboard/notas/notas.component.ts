@@ -31,28 +31,32 @@ export class NotasComponent {
   }
 
   exportaNotas() {
-    this.exportaNotas$ = this.notasService.exportaNotas().subscribe(
-      (data) => {
+    this.exportaNotas$ = this.notasService.exportaNotas().subscribe({
+      next: (data) => {
         if (data.codRet === 0) {
+          if (!Array.isArray(data.notas)) {
+            data.notas = [data.notas];
+          }
+
           this.notas = data.notas;
-          this.totalRegistros = this.notas.length;
+          this.totalRegistros = data.notas.length;
         } else {
           this.mensagemErro(data.msgRet);
         }
 
         this.carregando = false;
       },
-      (err) => {
+      error: (err) => {
         if (err.status === 500) {
           this.mensagemErro(
             'Servidor indisponível, tente novamente mais tarde.'
           );
         }
       },
-      () => {
+      complete: () => {
         this.carregando = false;
-      }
-    );
+      },
+    });
   }
 
   baixarNotas(nota: Nota) {

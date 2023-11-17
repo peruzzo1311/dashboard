@@ -47,11 +47,13 @@ export class LoginService {
 
   validarDocumento(
     documento: string,
-    tipoDocumento: string
+    tipoDocumento: string,
+    email: string
   ): Observable<ValidarDocumento> {
     const data = {
       cgcCpf: documento,
       tipCli: tipoDocumento,
+      email,
     };
 
     return this.http.post<ValidarDocumento>(
@@ -70,18 +72,22 @@ export class LoginService {
   }
 
   createUser(usuario: UsuarioRegistro): Observable<{ username: string }> {
+    const username = `${usuario
+      .nome!.trim()
+      .split(' ')[0]
+      .toLowerCase()}.${usuario.sobrenome!.trim().split(' ')[0].toLowerCase()}`;
+
     const data = {
-      username: `${usuario.nome}.${usuario.sobrenome}`,
+      username: username,
       fullName: `${usuario.nome} ${usuario.sobrenome}`,
-      email: `${usuario.nome}.${usuario.sobrenome}@kgepel.com.br`,
+      email: usuario.email,
       password: usuario.senha,
-      description: '',
       blocked: false,
       changePassword: false,
-      locale: '',
+      allowedToChangePassword: false,
       properties: [
         {
-          name: 'codCli',
+          name: 'codcli',
           value: usuario.codCli,
         },
       ],
@@ -93,6 +99,28 @@ export class LoginService {
       {
         headers: {
           Authorization: `Bearer ${usuario.token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  redefinirSenha(
+    usuario: string,
+    tokenTemporario: string,
+    senha: string
+  ): Observable<Object> {
+    const data = {
+      username: `${usuario}@kgepel.com.br`,
+      temporaryToken: tokenTemporario,
+      newPassword: senha,
+    };
+
+    return this.http.post<Object>(
+      'https://platform.senior.com.br/t/senior.com.br/bridge/1.0/rest/platform/authentication/actions/loginWithResetPassword',
+      data,
+      {
+        headers: {
           'Content-Type': 'application/json',
         },
       }

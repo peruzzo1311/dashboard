@@ -35,6 +35,10 @@ export class BoletosComponent {
     this.exportaTitulos$ = this.boletosService.exportaTitulos().subscribe({
       next: (data) => {
         if (data.codRet === 0) {
+          if (!Array.isArray(data.titulos)) {
+            data.titulos = [data.titulos];
+          }
+
           this.boletos = data.titulos;
           this.totalRegistros = this.boletos.length;
         } else {

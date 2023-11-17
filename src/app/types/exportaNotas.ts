@@ -1,7 +1,7 @@
 import Requisicao from './Requisicao';
 
 export default interface exportaNotas extends Requisicao {
-  notas: Nota[];
+  notas: Nota | Nota[];
 }
 
 export interface Nota {

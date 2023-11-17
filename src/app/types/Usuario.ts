@@ -31,6 +31,5 @@ export interface UsuarioRegistro {
   email: string;
   senha: string | null | undefined;
   codCli: number;
-  documento: string;
   token: string;
 }

@@ -1,7 +1,7 @@
 import Requisicao from './Requisicao';
 
 export default interface ExportaTitulos extends Requisicao {
-  titulos: Titulo[];
+  titulos: Titulo | Titulo[];
 }
 
 export interface Titulo {

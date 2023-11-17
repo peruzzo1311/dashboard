@@ -20,7 +20,7 @@ export class SidebarComponent {
           {
             label: 'Inicio',
             icon: 'pi pi-fw pi-chart-bar',
-            routerLink: ['/dashboard/inicio'],
+            routerLink: ['inicio'],
 
             command: () => {
               this.sidebarVisivel = false;
@@ -34,7 +34,7 @@ export class SidebarComponent {
           {
             label: 'Boletos',
             icon: 'pi pi-fw pi-ticket',
-            routerLink: ['/dashboard/boletos'],
+            routerLink: ['boletos'],
 
             command: () => {
               this.sidebarVisivel = false;
@@ -43,7 +43,7 @@ export class SidebarComponent {
           {
             label: 'Notas fiscais',
             icon: 'pi pi-fw pi-money-bill',
-            routerLink: ['/dashboard/notas-fiscais'],
+            routerLink: ['notas-fiscais'],
 
             command: () => {
               this.sidebarVisivel = false;

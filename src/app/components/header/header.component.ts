@@ -15,7 +15,7 @@ export class HeaderComponent {
   tema: 'dark-theme' | 'light-theme';
 
   constructor(public router: Router, private themeService: ThemeService) {
-    this.usuario = JSON.parse(sessionStorage.getItem('usuario') || '');
+    this.usuario = JSON.parse(sessionStorage.getItem('usuario') ?? '');
     this.tema = localStorage.getItem('tema') as 'dark-theme' | 'light-theme';
 
     this.items = [
@@ -33,7 +33,7 @@ export class HeaderComponent {
             icon: 'pi pi-sign-out',
             command: () => {
               sessionStorage.removeItem('usuario');
-              this.router.navigate(['']);
+              this.router.navigate(['login']);
             },
           },
         ],
