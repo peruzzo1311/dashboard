@@ -179,7 +179,7 @@ export class BoletosComponent {
       let value2 = data2[event.field!];
       let result = null;
 
-      if (event.field === 'datGer') {
+      if (event.field === 'vctPro') {
         value1 = value1.split('/').reverse().join('/');
         value2 = value2.split('/').reverse().join('/');
       }

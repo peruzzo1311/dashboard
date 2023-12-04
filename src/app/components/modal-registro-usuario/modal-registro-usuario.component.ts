@@ -77,6 +77,7 @@ export class ModalRegistroUsuarioComponent {
           next: (res) => {
             if (res.codRet === 0) {
               this.codCli = res.codCli;
+              this.loginUsuario = res.userName.toLowerCase();
 
               this.mostrarEtapa1 = false;
               this.mostrarEtapa2 = true;
@@ -101,58 +102,49 @@ export class ModalRegistroUsuarioComponent {
   formSubmit() {
     this.cadastrando = true;
 
-    this.loginService
-      .login('weliton.ribeiro@kgepel.com.br', 'S@p1ens')
-      .subscribe({
-        next: (res: any) => {
-          const token = JSON.parse(res.jsonToken).access_token;
+    this.loginService.login('admin@kgepel.com.br', 'S@p1ens').subscribe({
+      next: (res: any) => {
+        const token = JSON.parse(res.jsonToken).access_token;
 
-          const usuarioRegistro: UsuarioRegistro = {
-            nome: this.nome?.value,
-            sobrenome: this.sobrenome?.value,
-            email: this.emailRegistro,
-            senha: this.senhaRegistro?.value,
-            codCli: this.codCli,
-            token: token,
-          };
+        const usuarioRegistro: UsuarioRegistro = {
+          nome: this.nome?.value,
+          sobrenome: this.sobrenome?.value,
+          loginUsuario: this.loginUsuario,
+          email: this.emailRegistro,
+          senha: this.senhaRegistro?.value,
+          codCli: this.codCli,
+          token: token,
+        };
 
-          this.loginService.createUser(usuarioRegistro).subscribe({
-            next: (res) => {
-              this.loginUsuario = `${usuarioRegistro
-                .nome!.trim()
-                .split(' ')[0]
-                .toLowerCase()}.${usuarioRegistro
-                .sobrenome!.trim()
-                .split(' ')[0]
-                .toLowerCase()}`;
+        this.loginService.createUser(usuarioRegistro).subscribe({
+          next: (res) => {
+            this.mostrarEtapa2 = false;
+            this.mostrarEtapa3 = true;
+          },
+          error: (err) => {
+            if (err.error.message) {
+              this.mensagemErro(err.error.message);
+            } else {
+              this.mensagemErro(
+                'Serviço indisponível, tente novamente mais tarde!'
+              );
+            }
 
-              this.mostrarEtapa2 = false;
-              this.mostrarEtapa3 = true;
-            },
-            error: (err) => {
-              if (err.error.message) {
-                this.mensagemErro(err.error.message);
-              } else {
-                this.mensagemErro(
-                  'Serviço indisponível, tente novamente mais tarde!'
-                );
-              }
-
-              this.cadastrando = false;
-            },
-            complete: () => (this.cadastrando = false),
-          });
-        },
-        error: (err: any) => {
-          if (err.error.message) {
-            this.mensagemErro(err.error.message);
-          } else {
-            this.mensagemErro(
-              'Serviço indisponível, tente novamente mais tarde!'
-            );
-          }
-        },
-      });
+            this.cadastrando = false;
+          },
+          complete: () => (this.cadastrando = false),
+        });
+      },
+      error: (err: any) => {
+        if (err.error.message) {
+          this.mensagemErro(err.error.message);
+        } else {
+          this.mensagemErro(
+            'Serviço indisponível, tente novamente mais tarde!'
+          );
+        }
+      },
+    });
   }
 
   mensagemErro(mensagem: string) {

@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { ModalForgotPasswordComponent } from 'src/app/components/modal-forgot-password/modal-forgot-password.component';
 import { ModalRegistroUsuarioComponent } from 'src/app/components/modal-registro-usuario/modal-registro-usuario.component';
 import { ModalResetPasswordComponent } from 'src/app/components/modal-reset-password/modal-reset-password.component';
 import { LoginService } from 'src/app/services/login.service';
@@ -18,6 +19,9 @@ export class LoginComponent {
 
   @ViewChild(ModalResetPasswordComponent)
   modalResetPassword!: ModalResetPasswordComponent;
+
+  @ViewChild(ModalForgotPasswordComponent)
+  modalForgotPassword!: ModalForgotPasswordComponent;
 
   title = 'dashboard';
   carregando = false;
@@ -38,12 +42,16 @@ export class LoginComponent {
     this.mostrarSenha = !this.mostrarSenha;
   }
 
-  toggleMenuRegistro() {
+  showMenuRegistro() {
     this.modalRegistroUsuario.show();
   }
 
   showModalResetPassword() {
     this.modalResetPassword.show();
+  }
+
+  showModalForgotPassword() {
+    this.modalForgotPassword.show();
   }
 
   entrar(usuario: string, senha: string) {

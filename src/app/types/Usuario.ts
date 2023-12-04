@@ -28,6 +28,7 @@ export interface Propriedades {
 export interface UsuarioRegistro {
   nome: string | null | undefined;
   sobrenome: string | null | undefined;
+  loginUsuario: string;
   email: string;
   senha: string | null | undefined;
   codCli: number;

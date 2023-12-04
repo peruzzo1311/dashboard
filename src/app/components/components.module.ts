@@ -12,6 +12,7 @@ import { SidebarModule } from 'primeng/sidebar';
 import { ToastModule } from 'primeng/toast';
 
 import { HeaderComponent } from './header/header.component';
+import { ModalForgotPasswordComponent } from './modal-forgot-password/modal-forgot-password.component';
 import { ModalRegistroUsuarioComponent } from './modal-registro-usuario/modal-registro-usuario.component';
 import { ModalResetPasswordComponent } from './modal-reset-password/modal-reset-password.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
@@ -22,6 +23,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     SidebarComponent,
     ModalRegistroUsuarioComponent,
     ModalResetPasswordComponent,
+    ModalForgotPasswordComponent,
   ],
   imports: [
     CommonModule,
@@ -42,6 +44,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     SidebarComponent,
     ModalRegistroUsuarioComponent,
     ModalResetPasswordComponent,
+    ModalForgotPasswordComponent,
   ],
 })
 export class ComponentsModule {}
