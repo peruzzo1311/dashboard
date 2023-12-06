@@ -19,19 +19,35 @@
     >
       <ng-template pTemplate="caption">
         <div class="flex justify-content-between">
-          <button
-            pButton
-            pRipple
-            label="Baixar Notas"
-            [class]="
-              notasSelecionadas.length === 0
-                ? 'p-button-outlined'
-                : 'p-button-primary'
-            "
-            icon="pi pi-download"
-            (click)="baixarMultiplasNotas()"
-            [disabled]="notasSelecionadas.length === 0"
-          ></button>
+          <div class="flex gap-4">
+            <button
+              pButton
+              pRipple
+              label="Baixar Notas PDF"
+              [class]="
+                notasSelecionadas.length === 0
+                  ? 'p-button-outlined'
+                  : 'p-button-primary'
+              "
+              icon="pi pi-download"
+              (click)="baixarMultiplasNotas()"
+              [disabled]="notasSelecionadas.length === 0"
+            ></button>
+
+            <button
+              pButton
+              pRipple
+              label="Baixar Notas XML"
+              [class]="
+                notasSelecionadas.length === 0
+                  ? 'p-button-outlined'
+                  : 'p-button-primary'
+              "
+              icon="pi pi-download"
+              (click)="baixarMultiplasNotasXML()"
+              [disabled]="notasSelecionadas.length === 0"
+            ></button>
+          </div>
 
           <div class="flex gap-4">
             <button
@@ -71,7 +87,8 @@
           <th pSortableColumn="datAut">
             Data <p-sortIcon field="datAut"> </p-sortIcon>
           </th>
-          <th class="flex justify-content-center">Baixar</th>
+          <th class="text-center">Baixar XML</th>
+          <th class="text-center">Baixar PDF</th>
         </tr>
       </ng-template>
 
@@ -83,7 +100,18 @@
           <td>{{ nota.numNfv }}</td>
           <td>{{ nota.nomCli }}</td>
           <td>{{ nota.datAut }}</td>
-          <td class="flex justify-content-center">
+          <td class="text-center">
+            <i
+              [class]="
+                nota.baixandoXML
+                  ? 'pi pi-spin pi-spinner'
+                  : 'pi pi-download cursor-pointer'
+              "
+              style="font-size: 1.5rem"
+              (click)="nota.baixandoXML ? null : baixarNotasXML(nota)"
+            ></i>
+          </td>
+          <td class="text-center">
             <i
               [class]="
                 nota.baixando

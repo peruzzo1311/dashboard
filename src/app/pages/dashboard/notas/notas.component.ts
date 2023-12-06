@@ -52,8 +52,7 @@ export class NotasComponent {
             'Servidor indisponível, tente novamente mais tarde.'
           );
         }
-      },
-      complete: () => {
+
         this.carregando = false;
       },
     });
@@ -69,6 +68,8 @@ export class NotasComponent {
         } else {
           this.mensagemErro(data.msgRet);
         }
+
+        nota.baixando = false;
       },
       error: (err) => {
         if (err.status === 500) {
@@ -76,9 +77,36 @@ export class NotasComponent {
             'Servidor indisponível, tente novamente mais tarde.'
           );
         }
-      },
-      complete: () => {
+
         nota.baixando = false;
+      },
+    });
+  }
+
+  baixarNotasXML(nota: Nota) {
+    nota.baixandoXML = true;
+    console.log(nota);
+
+    this.notasService.baixarNotasXML(nota).subscribe({
+      next: (data) => {
+        if (data.codRet === 0) {
+          data.xmlNfe.forEach((xml: { string: string }) => {
+            this.base64ParaXml(xml.string, `nota_${nota.numNfv}.xml`);
+          });
+        } else {
+          this.mensagemErro(data.msgRet);
+        }
+
+        nota.baixandoXML = false;
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+
+        nota.baixandoXML = false;
       },
     });
   }
@@ -86,7 +114,7 @@ export class NotasComponent {
   baixarMultiplasNotas() {
     this.carregando = true;
     const zip = new JSZip();
-    const requests = [];
+    let requests = [];
 
     for (let nota of this.notasSelecionadas) {
       requests.push(this.notasService.baixarNotas(nota));
@@ -110,9 +138,13 @@ export class NotasComponent {
           const link = document.createElement('a');
 
           link.href = URL.createObjectURL(content);
-          link.download = 'notas.zip';
+          link.download = 'pdf_notas.zip';
           link.click();
         });
+
+        this.notasSelecionadas = [];
+        requests = [];
+        this.carregando = false;
       },
       error: (err) => {
         if (err.status === 500) {
@@ -120,8 +152,59 @@ export class NotasComponent {
             'Servidor indisponível, tente novamente mais tarde.'
           );
         }
+
+        this.notasSelecionadas = [];
+        requests = [];
+        this.carregando = false;
       },
-      complete: () => {
+    });
+  }
+
+  baixarMultiplasNotasXML() {
+    this.carregando = true;
+    const zip = new JSZip();
+    let requests = [];
+
+    for (let nota of this.notasSelecionadas) {
+      requests.push(this.notasService.baixarNotasXML(nota));
+    }
+
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        console.log(responses);
+        responses.forEach((data, index) => {
+          const nota = this.notasSelecionadas[index];
+
+          if (data && data.xmlNfe) {
+            data.xmlNfe.forEach((xml: { string: string }) => {
+              zip.file(`nota_${nota.numNfv}.xml`, xml.string, {
+                base64: true,
+              });
+            });
+          } else {
+            this.mensagemErro('Erro ao baixar nota.');
+          }
+        });
+
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+          const link = document.createElement('a');
+
+          link.href = URL.createObjectURL(content);
+          link.download = 'xml_notas.zip';
+          link.click();
+        });
+
+        this.notasSelecionadas = [];
+        requests = [];
+        this.carregando = false;
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+
         this.carregando = false;
       },
     });
@@ -136,6 +219,37 @@ export class NotasComponent {
       }
       const byteArray = new Uint8Array(byteNumbers);
       const pdfBlob = new Blob([byteArray], { type: 'application/pdf' });
+      const link = document.createElement('a');
+
+      link.href = URL.createObjectURL(pdfBlob);
+      link.download = fileName;
+      link.click();
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Sucesso',
+        detail: `${fileName} baixado com sucesso!`,
+      });
+
+      setTimeout(() => {
+        this.messageService.clear();
+      }, 3000);
+    } catch (erro: any) {
+      console.log(erro);
+
+      this.mensagemErro(erro.message);
+    }
+  }
+
+  base64ParaXml(base64: string, fileName: string) {
+    try {
+      const byteCharacters = atob(base64);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const pdfBlob = new Blob([byteArray], { type: 'application/xml' });
       const link = document.createElement('a');
 
       link.href = URL.createObjectURL(pdfBlob);

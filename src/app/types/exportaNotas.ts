@@ -17,4 +17,5 @@ export interface Nota {
   seqEnt: number;
   nomFil: string;
   baixando?: boolean;
+  baixandoXML?: boolean;
 }

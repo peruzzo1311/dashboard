@@ -63,6 +63,13 @@ export class BoletosComponent {
   baixarTitulos(boleto: Titulo) {
     boleto.baixando = true;
 
+    if (boleto.cartorio !== 'Não') {
+      this.mensagemErro('Situação do título não permite impressão');
+      boleto.baixando = false;
+
+      return;
+    }
+
     this.baixarTitulos$ = this.boletosService.baixarTitulos(boleto).subscribe({
       next: (data) => {
         if (data.codRet === 0) {
@@ -92,6 +99,13 @@ export class BoletosComponent {
     const requests = [];
 
     for (let boleto of this.boletosSelecionados) {
+      if (boleto.cartorio !== 'Não') {
+        this.mensagemErro('Situação do título não permite impressão');
+        this.carregando = false;
+
+        return;
+      }
+
       requests.push(this.boletosService.baixarTitulos(boleto));
     }
 

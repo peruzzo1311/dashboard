@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { Usuario } from '../types/Usuario';
-import baixarNotas from '../types/baixarNotas';
+import { baixarNotas, baixarNotasXml } from '../types/baixarNotas';
 import exportaNotas, { Nota } from '../types/exportaNotas';
 import { codCli } from './inicio.service';
 
@@ -39,7 +39,7 @@ export class NotasService {
     const body = this.codCli;
 
     return this.http.post<exportaNotas>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaNotas&useAlwaysArray=true',
+      'https://sistema-hml.kgepel.com.br:8443/API/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal.faturas&port=ExportaNotas&useAlwaysArray=true',
       body,
       {
         headers: {
@@ -63,6 +63,29 @@ export class NotasService {
 
     return this.http.post<baixarNotas>(
       'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=BaixarDanfe&useAlwaysArray=true',
+      body,
+      {
+        headers: {
+          user: 'joao.dayko',
+          encryptionType: '0',
+          Authorization: '',
+          pass: '102030',
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  baixarNotasXML(nota: Nota): Observable<baixarNotasXml> {
+    const body = {
+      codEmp: 1,
+      codFil: 1,
+      codSnf: 'NFE',
+      numNfv: 379748,
+    };
+
+    return this.http.post<baixarNotasXml>(
+      'https://sistema-hml.kgepel.com.br:8443/API/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal.faturas&port=BaixarXml&useAlwaysArray=true',
       body,
       {
         headers: {
