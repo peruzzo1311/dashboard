@@ -11,7 +11,7 @@
             font-size: 2rem;
             font-weight: 700;
             color: var(--primary-color);
-            background-color: rgb(9 85 46 / 20%);
+            background-color: rgb(1 113 187 / 20%);
             border-radius: 0.5rem;
             padding: 0.625rem;
           "
@@ -30,10 +30,10 @@
 </div>
 
 <div
-  class="grid grid-nogutter mt-4 justify-content-between slide-in-left"
+  class="grid grid-nogutter mt-4 justify-content-between slide-in-left gap-4 lg:gap-0"
   *ngIf="!carregandoGraficos; else skeletonGraficos"
 >
-  <div class="col-12 lg:col-6 pr-2">
+  <div class="col-12 lg:col-6 lg:pr-2">
     <p-card class="fadein animation-duration-1000 animation-ease-out graphCard">
       <span class="text-xl font-medium text-800">
         Contas a pagar nos próximos 6 dias
@@ -49,7 +49,7 @@
     </p-card>
   </div>
 
-  <div class="col-12 lg:col-6 pl-2">
+  <div class="col-12 lg:col-6 lg:pl-2">
     <p-card class="fadein animation-duration-1000 animation-ease-out graphCard">
       <span class="text-xl font-medium text-800">
         Contas a pagar por período

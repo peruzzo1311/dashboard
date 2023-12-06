@@ -56,7 +56,7 @@ export class LoginComponent {
 
   entrar(usuario: string, senha: string) {
     this.carregando = true;
-    usuario = `${usuario.trim().toLowerCase()}@kgepel.com.br`;
+    usuario = `${usuario.trim().toLowerCase()}@prisma-demo.com.br.seniorx`;
     let token = '';
 
     this.loginService.login(usuario, senha).subscribe({
