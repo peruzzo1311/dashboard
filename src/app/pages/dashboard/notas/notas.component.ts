@@ -90,9 +90,7 @@ export class NotasComponent {
     this.notasService.baixarNotasXML(nota).subscribe({
       next: (data) => {
         if (data.codRet === 0) {
-          data.xmlNfe.forEach((xml: { string: string }) => {
-            this.base64ParaXml(xml.string, `nota_${nota.numNfv}.xml`);
-          });
+          this.base64ParaXml(data.xmlNfe.string, `nota_${nota.numNfv}.xml`);
         } else {
           this.mensagemErro(data.msgRet);
         }
@@ -171,15 +169,12 @@ export class NotasComponent {
 
     forkJoin(requests).subscribe({
       next: (responses) => {
-        console.log(responses);
         responses.forEach((data, index) => {
           const nota = this.notasSelecionadas[index];
 
           if (data && data.xmlNfe) {
-            data.xmlNfe.forEach((xml: { string: string }) => {
-              zip.file(`nota_${nota.numNfv}.xml`, xml.string, {
-                base64: true,
-              });
+            zip.file(`nota_${nota.numNfv}.xml`, data.xmlNfe.string, {
+              base64: true,
             });
           } else {
             this.mensagemErro('Erro ao baixar nota.');
