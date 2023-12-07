@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import * as JSZip from 'jszip';
-import { MessageService, SortEvent } from 'primeng/api';
+import { MenuItem, MessageService, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { Subscription, forkJoin } from 'rxjs';
 import { NotasService } from 'src/app/services/notas.service';
@@ -19,6 +19,7 @@ export class NotasComponent {
   totalRegistros: number = 0;
   notasSelecionadas: Nota[] = [];
   valorInput: string = '';
+  downloadOptions: MenuItem[] | undefined;
 
   exportaNotas$!: Subscription;
   baixarNotas$!: Subscription;
@@ -28,6 +29,35 @@ export class NotasComponent {
     private messageService: MessageService
   ) {
     this.exportaNotas();
+
+    this.downloadOptions = [
+      {
+        label: 'Opções',
+        items: [
+          {
+            label:
+              '<div class="flex items-center"><span>Baixar PDF</span></div>',
+            escape: false,
+            icon: 'pi pi-file-pdf',
+            iconClass: 'text-xl',
+          },
+          {
+            label:
+              '<div class="flex items-center"><span>Baixar XML</span></div>',
+            escape: false,
+            icon: 'pi pi-file',
+            iconClass: 'text-xl',
+          },
+          {
+            label:
+              '<div class="flex items-center"><span>Baixar PDF e XML</span></div>',
+            escape: false,
+            icon: 'pi pi-file',
+            iconClass: 'text-xl',
+          },
+        ],
+      },
+    ];
   }
 
   exportaNotas() {
@@ -57,6 +87,20 @@ export class NotasComponent {
         this.carregando = false;
       },
     });
+  }
+
+  baixarNota(nota: Nota, label: string) {
+    switch (this.valorInput) {
+      case 'Baixar PDF':
+        this.baixarNotas(nota);
+        break;
+      // case 'Baixar XML':
+      //   this.baixarXml(nota);
+      //   break;
+      // case 'Baixar PDF e XML':
+      //   this.baixarPdfExml(nota);
+      //   break;
+    }
   }
 
   baixarNotas(nota: Nota) {

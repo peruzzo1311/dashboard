@@ -12,6 +12,8 @@ import { DialogModule } from 'primeng/dialog';
 import { FocusTrapModule } from 'primeng/focustrap';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { RippleModule } from 'primeng/ripple';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -56,6 +58,8 @@ import { PagesRoutingModule } from './pages-routing.module';
     DialogModule,
     InputMaskModule,
     RadioButtonModule,
+    OverlayPanelModule,
+    MenuModule,
   ],
 })
 export class PagesModule {}

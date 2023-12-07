@@ -91,10 +91,21 @@
                   : 'pi pi-download cursor-pointer'
               "
               style="font-size: 1.5rem"
-              (click)="nota.baixando ? null : baixarNotas(nota)"
+              (click)="nota.baixando ? null : download.toggle($event)"
             ></i>
           </td>
         </tr>
+
+        <p-overlayPanel #download>
+          <p-menu [model]="downloadOptions">
+            <ng-template pTemplate="item" let-item>
+              <a class="flex gap-2" (click)="baixarNota(nota, item.label)">
+                <span [class]="item.icon"></span>
+                <span>{{ item.label }}</span>
+              </a>
+            </ng-template>
+          </p-menu>
+        </p-overlayPanel>
       </ng-template>
     </p-table>
   </p-card>
