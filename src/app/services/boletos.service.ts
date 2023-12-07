@@ -43,8 +43,8 @@ export class BoletosService {
       body,
       {
         headers: {
-          user: 'joao.dayko',
-          pass: '102030',
+          user: 'suporte',
+          pass: '@98fm',
           encryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
@@ -66,9 +66,9 @@ export class BoletosService {
       body,
       {
         headers: {
-          user: 'joao.dayko',
-          pass: '102030',
-          EncryptionType: '0',
+          user: 'suporte',
+          pass: '@98fm',
+          encryptionType: '0',
           Authorization: '',
           'Content-Type': 'application/json',
         },

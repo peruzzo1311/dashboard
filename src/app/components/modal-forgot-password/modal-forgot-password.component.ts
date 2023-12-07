@@ -45,78 +45,80 @@ export class ModalForgotPasswordComponent {
       return;
     }
 
-    this.loginService.login('admin@kgepel.com.br', 'S@p1ens').subscribe({
-      next: (res: any) => {
-        const token = JSON.parse(res.jsonToken).access_token;
+    this.loginService
+      .login('admin@prisma-demo.com.br.seniorx', 'S@p1ens')
+      .subscribe({
+        next: (res: any) => {
+          const token = JSON.parse(res.jsonToken).access_token;
 
-        this.newPassword = this.generatePassword();
+          this.newPassword = this.generatePassword();
 
-        this.loginService.getUser(this.username, token).subscribe({
-          next: (response: Usuario) => {
-            this.user = response;
-            this.email = response.email;
+          this.loginService.getUser(this.username, token).subscribe({
+            next: (response: Usuario) => {
+              this.user = response;
+              this.email = response.email;
 
-            this.loginService
-              .changePassword(this.username, this.newPassword, token)
-              .subscribe({
-                next: () => {
-                  this.loginService
-                    .updateUser(this.user, this.newPassword, token)
-                    .subscribe({
-                      next: (res) => {
-                        this.loginService
-                          .sendEmail(this.user.email, this.newPassword)
-                          .subscribe({
-                            next: (res) => {
-                              if (res.codRet === 0) {
-                                this.success = true;
-                              } else {
-                                this.mensagemErro(
-                                  'Não foi possível enviar o e-mail'
-                                );
-                              }
-                            },
-                            error: (err) => {
-                              if (err.error.message) {
-                                this.mensagemErro(err.error.message);
-                              } else {
-                                this.mensagemErro(
-                                  'Serviço indisponível, tente novamente mais tarde!'
-                                );
-                              }
-                            },
-                          });
-                      },
-                      error: (err) => {
-                        if (err.error.message) {
-                          this.mensagemErro(err.error.message);
-                        } else {
-                          this.mensagemErro(
-                            'Serviço indisponível, tente novamente mais tarde!'
-                          );
-                        }
-                      },
-                      complete: () => {
-                        this.isLoading = false;
-                      },
-                    });
-                },
-              });
-          },
-        });
-      },
-      error: (err: any) => {
-        if (err.error.message) {
-          this.mensagemErro(err.error.message);
-        } else {
-          this.mensagemErro(
-            'Serviço indisponível, tente novamente mais tarde!'
-          );
-        }
+              this.loginService
+                .changePassword(this.username, this.newPassword, token)
+                .subscribe({
+                  next: () => {
+                    this.loginService
+                      .updateUser(this.user, this.newPassword, token)
+                      .subscribe({
+                        next: (res) => {
+                          this.loginService
+                            .sendEmail(this.user.email, this.newPassword)
+                            .subscribe({
+                              next: (res) => {
+                                if (res.codRet === 0) {
+                                  this.success = true;
+                                } else {
+                                  this.mensagemErro(
+                                    'Não foi possível enviar o e-mail'
+                                  );
+                                }
+                              },
+                              error: (err) => {
+                                if (err.error.message) {
+                                  this.mensagemErro(err.error.message);
+                                } else {
+                                  this.mensagemErro(
+                                    'Serviço indisponível, tente novamente mais tarde!'
+                                  );
+                                }
+                              },
+                            });
+                        },
+                        error: (err) => {
+                          if (err.error.message) {
+                            this.mensagemErro(err.error.message);
+                          } else {
+                            this.mensagemErro(
+                              'Serviço indisponível, tente novamente mais tarde!'
+                            );
+                          }
+                        },
+                        complete: () => {
+                          this.isLoading = false;
+                        },
+                      });
+                  },
+                });
+            },
+          });
+        },
+        error: (err: any) => {
+          if (err.error.message) {
+            this.mensagemErro(err.error.message);
+          } else {
+            this.mensagemErro(
+              'Serviço indisponível, tente novamente mais tarde!'
+            );
+          }
 
-        this.isLoading = false;
-      },
-    });
+          this.isLoading = false;
+        },
+      });
   }
 
   generatePassword() {

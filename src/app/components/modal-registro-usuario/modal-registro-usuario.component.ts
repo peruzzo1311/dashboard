@@ -102,49 +102,51 @@ export class ModalRegistroUsuarioComponent {
   formSubmit() {
     this.cadastrando = true;
 
-    this.loginService.login('admin@kgepel.com.br', 'S@p1ens').subscribe({
-      next: (res: any) => {
-        const token = JSON.parse(res.jsonToken).access_token;
+    this.loginService
+      .login('admin@prisma-demo.com.br.seniorx', 'S@p1ens')
+      .subscribe({
+        next: (res: any) => {
+          const token = JSON.parse(res.jsonToken).access_token;
 
-        const usuarioRegistro: UsuarioRegistro = {
-          nome: this.nome?.value,
-          sobrenome: this.sobrenome?.value,
-          loginUsuario: this.loginUsuario,
-          email: this.emailRegistro,
-          senha: this.senhaRegistro?.value,
-          codCli: this.codCli,
-          token: token,
-        };
+          const usuarioRegistro: UsuarioRegistro = {
+            nome: this.nome?.value,
+            sobrenome: this.sobrenome?.value,
+            loginUsuario: this.loginUsuario,
+            email: this.emailRegistro,
+            senha: this.senhaRegistro?.value,
+            codCli: this.codCli,
+            token: token,
+          };
 
-        this.loginService.createUser(usuarioRegistro).subscribe({
-          next: (res) => {
-            this.mostrarEtapa2 = false;
-            this.mostrarEtapa3 = true;
-          },
-          error: (err) => {
-            if (err.error.message) {
-              this.mensagemErro(err.error.message);
-            } else {
-              this.mensagemErro(
-                'Serviço indisponível, tente novamente mais tarde!'
-              );
-            }
+          this.loginService.createUser(usuarioRegistro).subscribe({
+            next: (res) => {
+              this.mostrarEtapa2 = false;
+              this.mostrarEtapa3 = true;
+            },
+            error: (err) => {
+              if (err.error.message) {
+                this.mensagemErro(err.error.message);
+              } else {
+                this.mensagemErro(
+                  'Serviço indisponível, tente novamente mais tarde!'
+                );
+              }
 
-            this.cadastrando = false;
-          },
-          complete: () => (this.cadastrando = false),
-        });
-      },
-      error: (err: any) => {
-        if (err.error.message) {
-          this.mensagemErro(err.error.message);
-        } else {
-          this.mensagemErro(
-            'Serviço indisponível, tente novamente mais tarde!'
-          );
-        }
-      },
-    });
+              this.cadastrando = false;
+            },
+            complete: () => (this.cadastrando = false),
+          });
+        },
+        error: (err: any) => {
+          if (err.error.message) {
+            this.mensagemErro(err.error.message);
+          } else {
+            this.mensagemErro(
+              'Serviço indisponível, tente novamente mais tarde!'
+            );
+          }
+        },
+      });
   }
 
   mensagemErro(mensagem: string) {
