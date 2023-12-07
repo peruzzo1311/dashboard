@@ -97,14 +97,20 @@
         </tr>
 
         <p-overlayPanel #download>
-          <p-menu [model]="downloadOptions">
-            <ng-template pTemplate="item" let-item>
-              <a class="flex gap-2" (click)="baixarNota(nota, item.label)">
-                <span [class]="item.icon"></span>
-                <span>{{ item.label }}</span>
-              </a>
-            </ng-template>
-          </p-menu>
+          <div class="menu-item" pRipple (click)="baixarNota(nota, 'pdf')">
+            <span><i class="pi pi-file" style="font-size: 1.2rem"></i></span>
+            <span class="">Baixar PDF</span>
+          </div>
+
+          <div class="menu-item" pRipple>
+            <span><i class="pi pi-file" style="font-size: 1.2rem"></i></span>
+            <span class="">Baixar XML</span>
+          </div>
+
+          <div class="menu-item" pRipple>
+            <span><i class="pi pi-file" style="font-size: 1.2rem"></i></span>
+            <span class="">Baixar PDF e XML</span>
+          </div>
         </p-overlayPanel>
       </ng-template>
     </p-table>
