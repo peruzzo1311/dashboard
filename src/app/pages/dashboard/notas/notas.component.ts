@@ -64,12 +64,13 @@ export class NotasComponent {
       case 'pdf':
         this.baixarNotas(nota);
         break;
-      // case 'Baixar XML':
-      //   this.baixarXml(nota);
-      //   break;
-      // case 'Baixar PDF e XML':
-      //   this.baixarPdfExml(nota);
-      //   break;
+      case 'xml':
+        this.baixarNotasXML(nota);
+        break;
+      case 'pdf e xml':
+        this.baixarNotas(nota);
+        this.baixarNotasXML(nota);
+        break;
     }
   }
 
@@ -98,10 +99,36 @@ export class NotasComponent {
     });
   }
 
+  baixarNotasXML(nota: Nota) {
+    nota.baixando = true;
+    console.log(nota);
+
+    this.notasService.baixarNotasXML(nota).subscribe({
+      next: (data) => {
+        if (data.codRet === 0) {
+          this.base64ParaXml(data.xmlNfe.string, `nota_${nota.numNfv}.xml`);
+        } else {
+          this.mensagemErro(data.msgRet);
+        }
+
+        nota.baixando = false;
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+
+        nota.baixando = false;
+      },
+    });
+  }
+
   baixarMultiplasNotas() {
     this.carregando = true;
     const zip = new JSZip();
-    const requests = [];
+    let requests = [];
 
     for (let nota of this.notasSelecionadas) {
       requests.push(this.notasService.baixarNotas(nota));
@@ -125,9 +152,62 @@ export class NotasComponent {
           const link = document.createElement('a');
 
           link.href = URL.createObjectURL(content);
-          link.download = 'notas.zip';
+          link.download = 'pdf_notas.zip';
           link.click();
         });
+
+        this.notasSelecionadas = [];
+        requests = [];
+        this.carregando = false;
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
+        }
+
+        this.notasSelecionadas = [];
+        requests = [];
+        this.carregando = false;
+      },
+    });
+  }
+
+  baixarMultiplasNotasXML() {
+    this.carregando = true;
+    const zip = new JSZip();
+    let requests = [];
+
+    for (let nota of this.notasSelecionadas) {
+      requests.push(this.notasService.baixarNotasXML(nota));
+    }
+
+    forkJoin(requests).subscribe({
+      next: (responses) => {
+        responses.forEach((data, index) => {
+          const nota = this.notasSelecionadas[index];
+
+          if (data && data.xmlNfe) {
+            zip.file(`nota_${nota.numNfv}.xml`, data.xmlNfe.string, {
+              base64: true,
+            });
+          } else {
+            this.mensagemErro('Erro ao baixar nota.');
+          }
+        });
+
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+          const link = document.createElement('a');
+
+          link.href = URL.createObjectURL(content);
+          link.download = 'xml_notas.zip';
+          link.click();
+        });
+
+        this.notasSelecionadas = [];
+        requests = [];
+        this.carregando = false;
       },
       error: (err) => {
         if (err.status === 500) {

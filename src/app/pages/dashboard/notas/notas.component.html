@@ -19,19 +19,35 @@
     >
       <ng-template pTemplate="caption">
         <div class="flex justify-content-between">
-          <button
-            pButton
-            pRipple
-            label="Baixar Notas"
-            [class]="
-              notasSelecionadas.length === 0
-                ? 'p-button-outlined'
-                : 'p-button-primary'
-            "
-            icon="pi pi-download"
-            (click)="baixarMultiplasNotas()"
-            [disabled]="notasSelecionadas.length === 0"
-          ></button>
+          <div class="flex gap-4">
+            <button
+              pButton
+              pRipple
+              label="Baixar PDF's"
+              [class]="
+                notasSelecionadas.length === 0
+                  ? 'p-button-outlined'
+                  : 'p-button-primary'
+              "
+              icon="pi pi-download"
+              (click)="baixarMultiplasNotas()"
+              [disabled]="notasSelecionadas.length === 0"
+            ></button>
+
+            <button
+              pButton
+              pRipple
+              label="Baixar XML's"
+              [class]="
+                notasSelecionadas.length === 0
+                  ? 'p-button-outlined'
+                  : 'p-button-primary'
+              "
+              icon="pi pi-download"
+              (click)="baixarMultiplasNotasXML()"
+              [disabled]="notasSelecionadas.length === 0"
+            ></button>
+          </div>
 
           <div class="flex gap-4">
             <button
@@ -98,18 +114,26 @@
 
         <p-overlayPanel #download>
           <div class="menu-item" pRipple (click)="baixarNota(nota, 'pdf')">
-            <span><i class="pi pi-file" style="font-size: 1.2rem"></i></span>
-            <span class="">Baixar PDF</span>
+            <span
+              ><i class="pi pi-file-pdf" style="font-size: 1.2rem"></i
+            ></span>
+            <span>Baixar PDF</span>
           </div>
 
-          <div class="menu-item" pRipple>
-            <span><i class="pi pi-file" style="font-size: 1.2rem"></i></span>
-            <span class="">Baixar XML</span>
+          <div class="menu-item" pRipple (click)="baixarNota(nota, 'xml')">
+            <span
+              ><i class="pi pi-file-excel" style="font-size: 1.2rem"></i
+            ></span>
+            <span>Baixar XML</span>
           </div>
 
-          <div class="menu-item" pRipple>
+          <div
+            class="menu-item"
+            pRipple
+            (click)="baixarNota(nota, 'pdf e xml')"
+          >
             <span><i class="pi pi-file" style="font-size: 1.2rem"></i></span>
-            <span class="">Baixar PDF e XML</span>
+            <span>Baixar PDF e XML</span>
           </div>
         </p-overlayPanel>
       </ng-template>

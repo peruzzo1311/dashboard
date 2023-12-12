@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { Usuario } from '../types/Usuario';
-import baixarNotas from '../types/baixarNotas';
+import { baixarNotas, baixarNotasXML } from '../types/baixarNotas';
 import exportaNotas, { Nota } from '../types/exportaNotas';
 import { codCli } from './inicio.service';
 
@@ -67,9 +67,32 @@ export class NotasService {
       {
         headers: {
           user: 'suporte',
+          pass: '@98fm',
           encryptionType: '0',
           Authorization: '',
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+  }
+
+  baixarNotasXML(nota: Nota): Observable<baixarNotasXML> {
+    const body = {
+      codEmp: nota.codEmp,
+      codFil: nota.codFil,
+      codSnf: nota.codSnf,
+      numNfv: nota.numNfv,
+    };
+
+    return this.http.post<baixarNotasXML>(
+      'https://demonstra.prismainformatica.com.br:8188/API/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=BaixarXml&useAlwaysArray=true',
+      body,
+      {
+        headers: {
+          user: 'suporte',
           pass: '@98fm',
+          encryptionType: '0',
+          Authorization: '',
           'Content-Type': 'application/json',
         },
       }
