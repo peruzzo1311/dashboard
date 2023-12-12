@@ -78,10 +78,10 @@ export class NotasService {
 
   baixarNotasXML(nota: Nota): Observable<baixarNotasXml> {
     const body = {
-      codEmp: 1,
-      codFil: 1,
-      codSnf: 'NFE',
-      numNfv: 379748,
+      codEmp: nota.codEmp,
+      codFil: nota.codFil,
+      codSnf: nota.codSnf,
+      numNfv: nota.numNfv,
     };
 
     return this.http.post<baixarNotasXml>(
