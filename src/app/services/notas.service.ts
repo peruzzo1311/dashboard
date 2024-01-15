@@ -85,7 +85,7 @@ export class NotasService {
     };
 
     return this.http.post<baixarNotasXML>(
-      'https://demonstra.prismainformatica.com.br:8188/API/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=BaixarXml&useAlwaysArray=true',
+      'https://demonstra.prismainformatica.com.br:8188/SXI/G5Rest?server=https://demonstra.prismainformatica.com.br:8188&module=sapiens&service=com.prisma.portal.faturas&port=BaixarXml&useAlwaysArray=true',
       body,
       {
         headers: {

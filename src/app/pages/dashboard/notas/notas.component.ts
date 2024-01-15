@@ -101,12 +101,11 @@ export class NotasComponent {
 
   baixarNotasXML(nota: Nota) {
     nota.baixando = true;
-    console.log(nota);
 
     this.notasService.baixarNotasXML(nota).subscribe({
       next: (data) => {
         if (data.codRet === 0) {
-          this.base64ParaXml(data.xmlNfe.string, `nota_${nota.numNfv}.xml`);
+          this.base64ParaXml(data.xmlNfe[0].string, `nota_${nota.numNfv}.xml`);
         } else {
           this.mensagemErro(data.msgRet);
         }
@@ -189,7 +188,7 @@ export class NotasComponent {
           const nota = this.notasSelecionadas[index];
 
           if (data && data.xmlNfe) {
-            zip.file(`nota_${nota.numNfv}.xml`, data.xmlNfe.string, {
+            zip.file(`nota_${nota.numNfv}.xml`, data.xmlNfe[0].string, {
               base64: true,
             });
           } else {

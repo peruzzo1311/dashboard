@@ -5,5 +5,5 @@ export interface baixarNotas extends Requisicao {
 }
 
 export interface baixarNotasXML extends Requisicao {
-  xmlNfe: { string: string };
+  xmlNfe: { string: string }[];
 }
