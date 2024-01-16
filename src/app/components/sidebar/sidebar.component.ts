@@ -49,6 +49,15 @@ export class SidebarComponent {
               this.sidebarVisivel = false;
             },
           },
+          {
+            label: 'Romaneios',
+            icon: 'pi pi-fw pi-truck',
+            routerLink: ['/dashboard/romaneios'],
+
+            command: () => {
+              this.sidebarVisivel = false;
+            },
+          },
         ],
       },
     ];

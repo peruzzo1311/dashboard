@@ -22,6 +22,7 @@ import { InicioComponent } from './dashboard/inicio/inicio.component';
 import { NotasComponent } from './dashboard/notas/notas.component';
 import { LoginComponent } from './login/login.component';
 import { PagesRoutingModule } from './pages-routing.module';
+import { RomaneiosComponent } from './dashboard/romaneios/romaneios.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { PagesRoutingModule } from './pages-routing.module';
     InicioComponent,
     BoletosComponent,
     NotasComponent,
+    RomaneiosComponent,
   ],
   imports: [
     CommonModule,
