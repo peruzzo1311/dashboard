@@ -31,7 +31,6 @@ export class RomaneiosComponent {
   exportaRomaneios() {
     this.exportaRomaneios$ = this.romaneiosService.ExportaRomaneios().subscribe((data) => {
       if (data.codRet === 0) {
-        console.log(data.romaneios)
         this.romaneios = data.romaneios;
         this.totalRegistros = data.romaneios.length;
       } else {
