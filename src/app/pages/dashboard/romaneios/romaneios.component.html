@@ -1,0 +1,112 @@
+<div class="fadeinright animation-duration-500 animation-ease-out">
+  <p-card>
+    <p-table
+      #tableRomaneios
+      [value]="romaneios"
+      styleClass="p-datatable-striped"
+      [paginator]="true"
+      [rows]="quantidadeLinhas"
+      [totalRecords]="totalRegistros"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="carregando"
+      loadingIcon="pi pi-spin pi-spinner"
+      (sortFunction)="ordenar($event)"
+      [customSort]="true"
+      dataKey="nomFor"
+      [globalFilterFields]="[
+        'nomFor',
+        'codPro',
+        'cplIpo',
+        'codMoe',
+        'desFam',
+        'qtdPed',
+        'qtdRec',
+        'qtdCan',
+        'qtdAbe',
+      ]"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between">
+          <div class="flex gap-4">
+            <button
+              pButton
+              label="Limpar filtro"
+              class="p-button-outlined"
+              icon="pi pi-filter-slash"
+              (click)="clear(tableRomaneios)"
+            ></button>
+
+            <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="valorInput"
+                class="p-inputtext-sm"
+                (input)="tableRomaneios.filterGlobal(valorInput, 'contains')"
+                placeholder="Pesquisar Nota..."
+              />
+            </span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="nomFor">
+            Nome do Fornecedor<p-sortIcon field="nomFor"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="codPro">
+            Produto<p-sortIcon field="codPro"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="cplIpo" style="width:20%">
+            Desc.Produto<p-sortIcon field="cplIpo"> </p-sortIcon>
+          </th>
+          <th>
+            Cod.Safra
+          </th>
+          <th pSortableColumn="codMoe">
+            Moeda<p-sortIcon field="codMoe"> </p-sortIcon>
+          </th>
+          <th>
+            Família
+          </th>
+          <th pSortableColumn="desFam">
+            Desc.Família<p-sortIcon field="desFam"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="qtdPed">
+            Qtd.Produto<p-sortIcon field="qtdPed"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="qtdRec">
+            Qtd.Recebida<p-sortIcon field="qtdRec"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="qtdCan">
+            Qtd.Cancelada<p-sortIcon field="qtdCan"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="qtdAbe">
+            Qtd.Aberto<p-sortIcon field="qtdAbe"> </p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+
+
+      <ng-template pTemplate="body" let-romaneio>
+        <tr>
+          <td>{{romaneio.nomFor}}</td>
+          <td>{{romaneio.codPro}}</td>
+          <td>{{romaneio.cplIpo}}</td>
+          <td>{{romaneio.codSaf}}</td>
+          <td>{{romaneio.codMoe}}</td>
+          <td>{{romaneio.codFam}}</td>
+          <td>{{romaneio.desFam}}</td>
+          <td>{{romaneio.qtdPed}}</td>
+          <td>{{romaneio.qtdRec}}</td>
+          <td>{{romaneio.qtdCan}}</td>
+          <td>{{romaneio.qtdAbe}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>
+
+<p-toast></p-toast>

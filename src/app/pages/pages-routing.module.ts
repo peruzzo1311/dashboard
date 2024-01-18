@@ -5,6 +5,7 @@ import { BoletosComponent } from './dashboard/boletos/boletos.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { InicioComponent } from './dashboard/inicio/inicio.component';
 import { NotasComponent } from './dashboard/notas/notas.component';
+import { RomaneiosComponent } from './dashboard/romaneios/romaneios.component';
 import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
@@ -46,6 +47,10 @@ const routes: Routes = [
       {
         path: 'notas-fiscais',
         component: NotasComponent,
+      },
+      {
+        path: 'romaneios',
+        component: RomaneiosComponent,
       },
     ],
   },
