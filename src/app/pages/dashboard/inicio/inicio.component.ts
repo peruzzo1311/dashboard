@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Subscription, forkJoin, map } from 'rxjs';
 import { InicioService } from 'src/app/services/inicio.service';
+import { RomaneiosService } from 'src/app/services/romaneios.service';
 
 export interface ContasPagarPeriodo {
   label: string;
@@ -23,7 +24,7 @@ export interface DadosGraficoBarras {
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
   styleUrls: ['./inicio.component.scss'],
-  providers: [MessageService, InicioService],
+  providers: [MessageService, InicioService, RomaneiosService],
 })
 export class InicioComponent {
   cards: Card[] = [];
@@ -32,15 +33,18 @@ export class InicioComponent {
   carregandoGraficos = true;
 
   datasetContasPagar = {};
+  datasetRomenios = {};
   options = {};
 
   consultaContasPagar$!: Subscription;
   consultaContasPagarPeriodo$!: Subscription;
+  consultaRomaneios$!: Subscription;
   exportapagamentos$!: Subscription;
   exportapagamentosperiodo$!: Subscription;
 
   constructor(
     private inicioService: InicioService,
+    private romaneiosService: RomaneiosService,
     private messageService: MessageService
   ) {
     this.getCards();
@@ -135,12 +139,16 @@ export class InicioComponent {
     const results = forkJoin({
       consultaContasPagar: this.ConsultaContasPagar(),
       consultaContasPagarPeriodo: this.ConsultaContasPagarPeriodo(),
+      consultaRomaneios: this.ConsultaRomaneios()
     });
 
     results.subscribe({
       next: (values: any) => {
         this.datasetContasPagar = values.consultaContasPagar;
         this.contasPagarPeriodo = values.consultaContasPagarPeriodo;
+        this.datasetRomenios = values.consultaRomaneios;
+
+        console.log(this.datasetRomenios)
       },
       error: (err) => this.mensagemErro(err.error.message),
       complete: () => (this.carregandoGraficos = false),
@@ -192,6 +200,43 @@ export class InicioComponent {
           this.mensagemErro(data.msgRet);
 
           return [];
+        }
+      })
+    );
+  }
+
+  ConsultaRomaneios() {
+    return this.romaneiosService.ExportaRomaneios().pipe(
+      map((data) => {
+        if (data.codRet === 0) {
+          //data.romaneios.forEach((romaneio) => console.log(romaneio))
+          console.log(data.romaneios)
+
+          const labels = data.romaneios.map((titulo) => {
+            return titulo.codSaf;
+          });
+
+
+          const datasets = [
+            {
+              label: data.romaneios.map((titulo) => titulo.codPro),
+              data: data.romaneios.map((titulo) => titulo.qtdAbe ?? 0),
+              backgroundColor: data.romaneios.map(() =>
+                this.generateRandomColor()
+              ),
+            },
+          ];
+
+          //console.log(datasets);
+
+          return { labels, datasets };
+        } else {
+          this.mensagemErro(data.msgRet);
+
+          return {
+            labels: [],
+            datasets: [],
+          };
         }
       })
     );
