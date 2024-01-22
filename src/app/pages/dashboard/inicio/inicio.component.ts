@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { Subscription, forkJoin, map } from 'rxjs';
 import { InicioService } from 'src/app/services/inicio.service';
+import { RomaneiosService } from 'src/app/services/romaneios.service';
 
 export interface ContasPagarPeriodo {
   label: string;
@@ -19,11 +20,20 @@ export interface DadosGraficoBarras {
   datasets: any[];
 }
 
+interface Romaneio {
+  label: string | number;
+  qntAbe: number;
+  safra: string;
+  cplIpo: string;
+  desPro: string;
+  backgroundColor: string;
+}
+
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
   styleUrls: ['./inicio.component.scss'],
-  providers: [MessageService, InicioService],
+  providers: [MessageService, InicioService, RomaneiosService],
 })
 export class InicioComponent {
   cards: Card[] = [];
@@ -32,15 +42,22 @@ export class InicioComponent {
   carregandoGraficos = true;
 
   datasetContasPagar = {};
+  datasetRomenios = {};
   options = {};
+  optionsRomaneios = {};
+  safras: any = []
+  selectedSafra = "";
+  NewSeletedSafra = {name: ""};
 
   consultaContasPagar$!: Subscription;
   consultaContasPagarPeriodo$!: Subscription;
+  consultaRomaneios$!: Subscription;
   exportapagamentos$!: Subscription;
   exportapagamentosperiodo$!: Subscription;
 
   constructor(
     private inicioService: InicioService,
+    private romaneiosService: RomaneiosService,
     private messageService: MessageService
   ) {
     this.getCards();
@@ -52,6 +69,15 @@ export class InicioComponent {
         },
       },
     };
+
+    this.optionsRomaneios = {
+      indexAxis: 'y',
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    }
 
     this.getGraphs();
   }
@@ -135,12 +161,16 @@ export class InicioComponent {
     const results = forkJoin({
       consultaContasPagar: this.ConsultaContasPagar(),
       consultaContasPagarPeriodo: this.ConsultaContasPagarPeriodo(),
+      consultaRomaneios: this.ConsultaRomaneios()
     });
 
     results.subscribe({
       next: (values: any) => {
         this.datasetContasPagar = values.consultaContasPagar;
         this.contasPagarPeriodo = values.consultaContasPagarPeriodo;
+        this.datasetRomenios = values.consultaRomaneios;
+
+        //console.log("DataSetRomaneios",this.datasetRomenios)
       },
       error: (err) => this.mensagemErro(err.error.message),
       complete: () => (this.carregandoGraficos = false),
@@ -163,7 +193,7 @@ export class InicioComponent {
             },
           ];
 
-          console.log(datasets);
+          //console.log(datasets);
 
           return { labels, datasets };
         } else {
@@ -192,6 +222,68 @@ export class InicioComponent {
           this.mensagemErro(data.msgRet);
 
           return [];
+        }
+      })
+    );
+  }
+
+  ConsultaRomaneios() {
+    return this.romaneiosService.ExportaRomaneios().pipe(
+      map((data) => {
+        if (data.codRet === 0) {
+          const newRomaneios: Romaneio[] = [];
+          const backgroundColor = data.romaneios.map(() =>
+            this.generateRandomColor()
+          )
+
+          data.romaneios.forEach((romaneio, index) => {
+            newRomaneios.push({
+              label: romaneio.codPro,
+              qntAbe: romaneio.qtdAbe,
+              safra: romaneio.codSaf.toString(),
+              cplIpo: romaneio.cplIpo,
+              desPro: romaneio.desPro,
+              backgroundColor: backgroundColor[index]
+            });
+          });
+
+          const resultado = newRomaneios.reduce<Romaneio[]>((acc, obj) => {
+            const foundIndex = acc.findIndex(item => item.label === obj.label);
+
+            if (foundIndex !== -1) {
+              acc[foundIndex].qntAbe += obj.qntAbe;
+            } else {
+              acc.push({...obj});
+            }
+
+            return acc;
+          }, []);
+
+          const safrasUnicas = [...new Set(data.romaneios.map(obj => obj.codSaf))];
+
+          this.safras = safrasUnicas.map(safr => ({ name:safr }));
+
+          if (!this.selectedSafra) {
+            this.selectedSafra = this.safras[0].name
+          } else {
+            this.selectedSafra = this.NewSeletedSafra.name
+          }
+
+          const labels = resultado.filter((titulo) => titulo.safra.toString() === this.selectedSafra.toString()).map((titulo) => titulo.desPro);
+
+          const datasets = [{
+            data: resultado.map(item => item.qntAbe),
+            backgroundColor: resultado.map((item) => item.backgroundColor)
+          }];
+
+          return { labels ,datasets };
+        } else {
+          this.mensagemErro(data.msgRet);
+
+          return {
+            labels: [],
+            datasets: [],
+          };
         }
       })
     );
