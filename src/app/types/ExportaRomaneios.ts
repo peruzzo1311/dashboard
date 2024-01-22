@@ -16,4 +16,5 @@ export interface Romaneio {
   qtdCan: number;
   qtdPed: number;
   qtdRec: number;
+  desPro: string;
 }

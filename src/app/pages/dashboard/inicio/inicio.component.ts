@@ -22,9 +22,10 @@ export interface DadosGraficoBarras {
 
 interface Romaneio {
   label: string | number;
-  data: number;
+  qntAbe: number;
   safra: string;
   cplIpo: string;
+  desPro: string;
   backgroundColor: string;
 }
 
@@ -169,7 +170,7 @@ export class InicioComponent {
         this.contasPagarPeriodo = values.consultaContasPagarPeriodo;
         this.datasetRomenios = values.consultaRomaneios;
 
-        console.log("DataSetRomaneios",this.datasetRomenios)
+        //console.log("DataSetRomaneios",this.datasetRomenios)
       },
       error: (err) => this.mensagemErro(err.error.message),
       complete: () => (this.carregandoGraficos = false),
@@ -238,9 +239,10 @@ export class InicioComponent {
           data.romaneios.forEach((romaneio, index) => {
             newRomaneios.push({
               label: romaneio.codPro,
-              data: romaneio.qtdAbe,
+              qntAbe: romaneio.qtdAbe,
               safra: romaneio.codSaf.toString(),
               cplIpo: romaneio.cplIpo,
+              desPro: romaneio.desPro,
               backgroundColor: backgroundColor[index]
             });
           });
@@ -249,41 +251,30 @@ export class InicioComponent {
             const foundIndex = acc.findIndex(item => item.label === obj.label);
 
             if (foundIndex !== -1) {
-              acc[foundIndex].data += obj.data;
+              acc[foundIndex].qntAbe += obj.qntAbe;
             } else {
               acc.push({...obj});
             }
 
             return acc;
           }, []);
-          console.log("Resultado: ",resultado)
-
-
-
-          //data.romaneios.forEach((romaneio) => console.log(romaneio))
-          //console.log("Retorno api",data.romaneios)
 
           const safrasUnicas = [...new Set(data.romaneios.map(obj => obj.codSaf))];
-          //console.log("Safras", safrasUnicas.map(safr => ({ name:safr })))
 
           this.safras = safrasUnicas.map(safr => ({ name:safr }));
 
           if (!this.selectedSafra) {
             this.selectedSafra = this.safras[0].name
-            console.log("Safra selecionada 1:" ,this.selectedSafra)
           } else {
             this.selectedSafra = this.NewSeletedSafra.name
-            console.log("Safra selecionada 2:" ,this.selectedSafra)
           }
 
-          const labels = resultado.filter((titulo) => titulo.safra.toString() === this.selectedSafra.toString()).map((titulo) => titulo.cplIpo);
+          const labels = resultado.filter((titulo) => titulo.safra.toString() === this.selectedSafra.toString()).map((titulo) => titulo.desPro);
 
           const datasets = [{
-            data: resultado.map(item => item.data),
+            data: resultado.map(item => item.qntAbe),
             backgroundColor: resultado.map((item) => item.backgroundColor)
           }];
-
-          //console.log(datasets);
 
           return { labels ,datasets };
         } else {
@@ -296,10 +287,6 @@ export class InicioComponent {
         }
       })
     );
-  }
-
-  Teste() {
-    this.getGraphs()
   }
 
   mensagemErro(mensagem: string) {
