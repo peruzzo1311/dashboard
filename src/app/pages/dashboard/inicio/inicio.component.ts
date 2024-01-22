@@ -20,6 +20,14 @@ export interface DadosGraficoBarras {
   datasets: any[];
 }
 
+interface Romaneio {
+  label: string | number;
+  data: number;
+  safra: string;
+  cplIpo: string;
+  backgroundColor: string;
+}
+
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
@@ -35,6 +43,10 @@ export class InicioComponent {
   datasetContasPagar = {};
   datasetRomenios = {};
   options = {};
+  optionsRomaneios = {};
+  safras: any = []
+  selectedSafra = "";
+  NewSeletedSafra = {name: ""};
 
   consultaContasPagar$!: Subscription;
   consultaContasPagarPeriodo$!: Subscription;
@@ -56,6 +68,15 @@ export class InicioComponent {
         },
       },
     };
+
+    this.optionsRomaneios = {
+      indexAxis: 'y',
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+    }
 
     this.getGraphs();
   }
@@ -148,7 +169,7 @@ export class InicioComponent {
         this.contasPagarPeriodo = values.consultaContasPagarPeriodo;
         this.datasetRomenios = values.consultaRomaneios;
 
-        console.log(this.datasetRomenios)
+        console.log("DataSetRomaneios",this.datasetRomenios)
       },
       error: (err) => this.mensagemErro(err.error.message),
       complete: () => (this.carregandoGraficos = false),
@@ -171,7 +192,7 @@ export class InicioComponent {
             },
           ];
 
-          console.log(datasets);
+          //console.log(datasets);
 
           return { labels, datasets };
         } else {
@@ -209,27 +230,62 @@ export class InicioComponent {
     return this.romaneiosService.ExportaRomaneios().pipe(
       map((data) => {
         if (data.codRet === 0) {
-          //data.romaneios.forEach((romaneio) => console.log(romaneio))
-          console.log(data.romaneios)
+          const newRomaneios: Romaneio[] = [];
+          const backgroundColor = data.romaneios.map(() =>
+            this.generateRandomColor()
+          )
 
-          const labels = data.romaneios.map((titulo) => {
-            return titulo.codSaf;
+          data.romaneios.forEach((romaneio, index) => {
+            newRomaneios.push({
+              label: romaneio.codPro,
+              data: romaneio.qtdAbe,
+              safra: romaneio.codSaf.toString(),
+              cplIpo: romaneio.cplIpo,
+              backgroundColor: backgroundColor[index]
+            });
           });
 
+          const resultado = newRomaneios.reduce<Romaneio[]>((acc, obj) => {
+            const foundIndex = acc.findIndex(item => item.label === obj.label);
 
-          const datasets = [
-            {
-              label: data.romaneios.map((titulo) => titulo.codPro),
-              data: data.romaneios.map((titulo) => titulo.qtdAbe ?? 0),
-              backgroundColor: data.romaneios.map(() =>
-                this.generateRandomColor()
-              ),
-            },
-          ];
+            if (foundIndex !== -1) {
+              acc[foundIndex].data += obj.data;
+            } else {
+              acc.push({...obj});
+            }
+
+            return acc;
+          }, []);
+          console.log("Resultado: ",resultado)
+
+
+
+          //data.romaneios.forEach((romaneio) => console.log(romaneio))
+          //console.log("Retorno api",data.romaneios)
+
+          const safrasUnicas = [...new Set(data.romaneios.map(obj => obj.codSaf))];
+          //console.log("Safras", safrasUnicas.map(safr => ({ name:safr })))
+
+          this.safras = safrasUnicas.map(safr => ({ name:safr }));
+
+          if (!this.selectedSafra) {
+            this.selectedSafra = this.safras[0].name
+            console.log("Safra selecionada 1:" ,this.selectedSafra)
+          } else {
+            this.selectedSafra = this.NewSeletedSafra.name
+            console.log("Safra selecionada 2:" ,this.selectedSafra)
+          }
+
+          const labels = resultado.filter((titulo) => titulo.safra.toString() === this.selectedSafra.toString()).map((titulo) => titulo.cplIpo);
+
+          const datasets = [{
+            data: resultado.map(item => item.data),
+            backgroundColor: resultado.map((item) => item.backgroundColor)
+          }];
 
           //console.log(datasets);
 
-          return { labels, datasets };
+          return { labels ,datasets };
         } else {
           this.mensagemErro(data.msgRet);
 
@@ -240,6 +296,10 @@ export class InicioComponent {
         }
       })
     );
+  }
+
+  Teste() {
+    this.getGraphs()
   }
 
   mensagemErro(mensagem: string) {

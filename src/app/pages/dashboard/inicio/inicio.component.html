@@ -80,20 +80,20 @@
   class="grid grid-nogutter mt-4 justify-content-between"
   *ngIf="!carregandoGraficos; else skeletonGraficos"
 >
-  <div class="col-12 lg:col-6 pr-2">
+  <div class="col-12 lg:col-12 pr-2">
     <p-card class="fadein animation-duration-1000 animation-ease-out graphCard">
-      <!-- <div class="card flex justify-content-center">
-        <p-dropdown [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" [showClear]="true" placeholder="Select a City"></p-dropdown>
-      </div> -->
-      <span class="text-xl font-medium text-800">
-        Teste
-      </span>
+      <div class="card flex justify-content-center align-items-center">
+        <span class="text-xl font-medium text-800">
+          Safra:
+        </span>
+        <p-dropdown [options]="safras" [(ngModel)]="NewSeletedSafra" optionLabel="name" [placeholder]="selectedSafra" (onChange)="Teste()"></p-dropdown>
+      </div>
 
       <div class="mt-4">
         <p-chart
           type="bar"
           [data]="datasetRomenios"
-          [options]="options"
+          [options]="optionsRomaneios"
         ></p-chart>
       </div>
     </p-card>

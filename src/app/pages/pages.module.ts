@@ -14,6 +14,7 @@ import { RippleModule } from 'primeng/ripple';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { DropdownModule } from 'primeng/dropdown';
 
 import { ComponentsModule } from '../components/components.module';
 import { BoletosComponent } from './dashboard/boletos/boletos.component';
@@ -52,6 +53,7 @@ import { RomaneiosComponent } from './dashboard/romaneios/romaneios.component';
     ChartModule,
     SkeletonModule,
     TableModule,
+    DropdownModule,
   ],
 })
 export class PagesModule {}
