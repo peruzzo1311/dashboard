@@ -9,6 +9,7 @@ import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
 import { FocusTrapModule } from 'primeng/focustrap';
 import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
@@ -25,6 +26,7 @@ import { BoletosComponent } from './dashboard/boletos/boletos.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { InicioComponent } from './dashboard/inicio/inicio.component';
 import { NotasComponent } from './dashboard/notas/notas.component';
+import { RomaneiosComponent } from './dashboard/romaneios/romaneios.component';
 import { LoginComponent } from './login/login.component';
 import { PagesRoutingModule } from './pages-routing.module';
 
@@ -35,6 +37,7 @@ import { PagesRoutingModule } from './pages-routing.module';
     InicioComponent,
     BoletosComponent,
     NotasComponent,
+    RomaneiosComponent,
   ],
   imports: [
     CommonModule,
@@ -60,6 +63,7 @@ import { PagesRoutingModule } from './pages-routing.module';
     RadioButtonModule,
     OverlayPanelModule,
     MenuModule,
+    DropdownModule,
   ],
 })
 export class PagesModule {}
