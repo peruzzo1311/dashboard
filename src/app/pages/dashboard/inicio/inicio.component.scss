@@ -21,6 +21,7 @@
       .p-card {
         box-shadow: var(--card-shadow);
         border-radius: 0.5rem;
+        width: 100%;
       }
 
       .p-card .p-card-body {
@@ -28,6 +29,7 @@
         border-radius: 0.5rem;
         background: var(--surface-card);
         border: 1px solid var(--surface-border);
+        height: 100%;
       }
     }
   }
