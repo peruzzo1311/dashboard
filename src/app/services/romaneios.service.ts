@@ -39,7 +39,7 @@ export class RomaneiosService {
     const body = {
       codEmp: '5',
       codFil: '1',
-      codFor: '1',
+      codFor: this.codCli.codCli,
     };
 
     return this.http.post<ExportaRomaneios>(
