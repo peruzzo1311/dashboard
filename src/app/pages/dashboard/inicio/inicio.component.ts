@@ -37,6 +37,7 @@ interface Romaneio {
 })
 export class InicioComponent {
   cards: Card[] = [];
+  cardsCotacao: any = [];
   contasPagarPeriodo: ContasPagarPeriodo[] = [];
   carregandoCards = true;
   carregandoGraficos = true;
@@ -61,6 +62,7 @@ export class InicioComponent {
     private messageService: MessageService
   ) {
     this.getCards();
+    this.cardsCotacao = this.ConsultaCotacao();
 
     this.options = {
       plugins: {
@@ -94,6 +96,8 @@ export class InicioComponent {
           const card = values[key];
 
           this.cards.push(card);
+
+          console.log("CARDS > ",this.cards)
         }
       },
       error: (err) => {
@@ -135,6 +139,26 @@ export class InicioComponent {
         }
       })
     );
+  }
+
+  ConsultaCotacao() {
+    return [
+      {
+        titulo: 'Valor Soja - Hoje',
+        valor: "R$ 50,00",
+        icone: `../../../../assets/images/soja.png`,
+      },
+      {
+        titulo: 'Valor Trigo - Hoje',
+        valor: "R$ 50,00",
+        icone: `../../../../assets/images/trigo.png`,
+      },
+      {
+        titulo: 'Valor Milho - Hoje',
+        valor: "R$ 50,00",
+        icone: `../../../../assets/images/milho.png`,
+      },
+      ];
   }
 
   ConsultaValorFaturadoMesAnterior() {
