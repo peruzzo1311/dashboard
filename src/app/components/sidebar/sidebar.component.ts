@@ -49,6 +49,11 @@ export class SidebarComponent {
               this.sidebarVisivel = false;
             },
           },
+        ],
+      },
+      {
+        label: 'Agro',
+        items: [
           {
             label: 'Romaneios',
             icon: 'pi pi-fw pi-truck',
@@ -58,8 +63,18 @@ export class SidebarComponent {
               this.sidebarVisivel = false;
             },
           },
+          {
+            label: 'Contratos',
+            icon: 'pi pi-fw pi-file-edit',
+            routerLink: ['/dashboard/contratos'],
+
+            command: () => {
+              this.sidebarVisivel = false;
+            },
+          },
         ],
       },
+
     ];
   }
 }

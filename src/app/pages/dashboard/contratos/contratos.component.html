@@ -1,0 +1,122 @@
+<div class="fadeinright animation-duration-500 animation-ease-out">
+  <p-card>
+    <p-table
+      #tableContratos
+      [value]="contratoCompra"
+      styleClass="p-datatable-striped"
+      [paginator]="true"
+      [rows]="quantidadeLinhas"
+      [totalRecords]="totalRegistros"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [loading]="carregando"
+      loadingIcon="pi pi-spin pi-spinner"
+      (sortFunction)="ordenar($event)"
+      [customSort]="true"
+      dataKey="numCtr"
+      [globalFilterFields]="[
+        'numCtr',
+        'codFor',
+        'tipVlz',
+      ]"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex justify-content-between">
+          <div class="flex gap-4">
+            <button
+              pButton
+              label="Limpar filtro"
+              class="p-button-outlined"
+              icon="pi pi-filter-slash"
+              (click)="clear(tableContratos)"
+            ></button>
+
+            <span class="p-input-icon-left ml-auto">
+              <i class="pi pi-search"></i>
+              <input
+                pInputText
+                type="text"
+                [(ngModel)]="valorInput"
+                class="p-inputtext-sm"
+                (input)="tableContratos.filterGlobal(valorInput, 'contains')"
+                placeholder="Pesquisar Contrato..."
+              />
+            </span>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="numCtr">
+            N: Contrato<p-sortIcon field="numCtr"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="codFor">
+            Fornecedor<p-sortIcon field="codFor"> </p-sortIcon>
+          </th>
+          <th pSortableColumn="tipVlz">
+            Tipo de Valorização<p-sortIcon field="tipVlz"> </p-sortIcon>
+          </th>
+          <th>
+            Moeda
+          </th>
+          <th>
+            Safra
+          </th>
+          <th>
+            Cod. Produto
+          </th>
+          <th>
+            Complemento
+          </th>
+          <th>
+            UM
+          </th>
+          <th>
+            Depósito
+          </th>
+          <th>
+            Origem da Mercadoria
+          </th>
+          <th>
+            Derivação
+          </th>
+          <th>
+            Tabela de Preço
+          </th>
+          <th>
+            Preço Unitário
+          </th>
+          <th>
+            Quantidade
+          </th>
+          <th>
+            Qtd. Utilizada
+          </th>
+        </tr>
+      </ng-template>
+
+
+      <ng-template pTemplate="body" let-contrato>
+        <tr>
+          <td>{{contrato.numCtr}}</td>
+          <td>{{contrato.codFor}}</td>
+          <td>{{ contrato.tipVlz == 1 ? 'Valorização Fixa' : (contrato.tipVlz == 2 ? 'Valorização Variável' : '') }}</td>
+          <td>{{contrato.codMoe}}</td>
+          <td>{{contrato.codSaf}}</td>
+          <td>{{contrato.produtos[0].codPro}}</td>
+          <td>{{contrato.produtos[0].cplCcp}}</td>
+          <td>{{contrato.produtos[0].uniMed}}</td>
+          <td>{{contrato.produtos[0].codDep}}</td>
+          <td>{{contrato.produtos[0].oriMer}}</td>
+          <td>{{contrato.produtos[0].codDer}}</td>
+          <td>{{contrato.produtos[0].codTpr}}</td>
+          <td>{{contrato.produtos[0].preUni}}</td>
+          <td>{{contrato.produtos[0].qtdFor}}</td>
+          <td>{{contrato.produtos[0].qtdUti}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>
+
+<p-toast></p-toast>

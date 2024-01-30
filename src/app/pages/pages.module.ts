@@ -27,6 +27,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { InicioComponent } from './dashboard/inicio/inicio.component';
 import { NotasComponent } from './dashboard/notas/notas.component';
 import { RomaneiosComponent } from './dashboard/romaneios/romaneios.component';
+import { ContratosComponent } from './dashboard/contratos/contratos.component';
 import { LoginComponent } from './login/login.component';
 import { PagesRoutingModule } from './pages-routing.module';
 
@@ -38,6 +39,7 @@ import { PagesRoutingModule } from './pages-routing.module';
     BoletosComponent,
     NotasComponent,
     RomaneiosComponent,
+    ContratosComponent,
   ],
   imports: [
     CommonModule,

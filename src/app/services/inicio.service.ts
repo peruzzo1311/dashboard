@@ -12,6 +12,16 @@ import consultaValorFaturadoMesAnterior from '../types/consultaValorFaturadoMesA
 export interface codCli {
   codCli: string | number;
 }
+export interface codEmp {
+  codEmp: string | number;
+}
+export interface codFil {
+  codFil: string | number;
+}
+
+export interface codFor {
+  codFor: string | number;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -24,6 +34,18 @@ export class InicioService {
     codCli: '',
   };
 
+  private codEmp: codEmp = {
+    codEmp: '',
+  };
+
+  private codFil: codFil = {
+    codFil: '',
+  };
+
+  private codFor: codFor = {
+    codFor: '',
+  };
+
   constructor(private http: HttpClient, private router: Router) {
     if (!this.usuario) {
       router.navigate(['login']);
@@ -34,6 +56,21 @@ export class InicioService {
         if (name.toLowerCase() === 'codcli') {
           this.codCli = {
             codCli: value,
+          };
+        }
+        if (name.toLowerCase() === 'codemp') {
+          this.codEmp = {
+            codEmp: value,
+          };
+        }
+        if (name.toLowerCase() === 'codfil') {
+          this.codFil = {
+            codFil: value,
+          };
+        }
+        if (name.toLowerCase() === 'codfor') {
+          this.codFor = {
+            codFor: value,
           };
         }
       });
