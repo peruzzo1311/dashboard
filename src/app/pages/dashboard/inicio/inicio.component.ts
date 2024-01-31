@@ -3,6 +3,8 @@ import { MessageService } from 'primeng/api';
 import { Subscription, forkJoin, map } from 'rxjs';
 import { InicioService } from 'src/app/services/inicio.service';
 import { RomaneiosService } from 'src/app/services/romaneios.service';
+import { CotacoesService } from 'src/app/services/cotacoes.service';
+import { Cotac } from 'src/app/types/ExportaCotacoes';
 
 export interface ContasPagarPeriodo {
   label: string;
@@ -29,11 +31,24 @@ interface Romaneio {
   backgroundColor: string;
 }
 
+type Cotacao = {
+  codMoe: string;
+  vlrPre: number;
+  desMoe: string;
+  datGer: string;
+  datMoe: string;
+  vlrCot: number;
+};
+
+type MoedasFaltantes = {
+  [codMoe: string]: boolean;
+};
+
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.component.html',
   styleUrls: ['./inicio.component.scss'],
-  providers: [MessageService, InicioService, RomaneiosService],
+  providers: [MessageService, InicioService, RomaneiosService, CotacoesService],
 })
 export class InicioComponent {
   cards: Card[] = [];
@@ -59,10 +74,11 @@ export class InicioComponent {
   constructor(
     private inicioService: InicioService,
     private romaneiosService: RomaneiosService,
+    private cotacoesService: CotacoesService,
     private messageService: MessageService
   ) {
     this.getCards();
-    this.cardsCotacao = this.ConsultaCotacao();
+    this.getCardsCotacoes();
 
     this.options = {
       plugins: {
@@ -96,8 +112,32 @@ export class InicioComponent {
           const card = values[key];
 
           this.cards.push(card);
+        }
+      },
+      error: (err) => {
+        if (err.status === 500) {
+          this.mensagemErro(
+            'Servidor indisponível, tente novamente mais tarde.'
+          );
 
-          console.log("CARDS > ",this.cards)
+          console.log(err);
+        }
+      },
+      complete: () => (this.carregandoCards = false),
+    });
+  }
+
+  getCardsCotacoes() {
+    const results = forkJoin({
+      consultaCotacoes: this.ConsultaCotacao(),
+    });
+
+    results.subscribe({
+      next: (values: any) => {
+        for (const key in values) {
+          const card = values[key];
+
+          this.cardsCotacao = card;
         }
       },
       error: (err) => {
@@ -139,26 +179,6 @@ export class InicioComponent {
         }
       })
     );
-  }
-
-  ConsultaCotacao() {
-    return [
-      {
-        titulo: 'Valor Soja - Hoje',
-        valor: "R$ 50,00",
-        icone: `../../../../assets/images/soja.png`,
-      },
-      {
-        titulo: 'Valor Trigo - Hoje',
-        valor: "R$ 50,00",
-        icone: `../../../../assets/images/trigo.png`,
-      },
-      {
-        titulo: 'Valor Milho - Hoje',
-        valor: "R$ 50,00",
-        icone: `../../../../assets/images/milho.png`,
-      },
-      ];
   }
 
   ConsultaValorFaturadoMesAnterior() {
@@ -334,6 +354,116 @@ export class InicioComponent {
         }
       })
     );
+  }
+
+  ConsultaCotacao() {
+    return this.cotacoesService.ExportaCotacoes().pipe(
+      map((data) => {
+        const codigosMoedaDesejados = [
+          { codMoe: "05", tituloPadrao: "Soja" },
+          { codMoe: "06", tituloPadrao: "Milho" },
+          { codMoe: "07", tituloPadrao: "Trigo" },
+          // Adicione mais moedas conforme necessário
+        ];
+
+        const mapeamentoIcones: {
+          [codMoe: string]: string;
+        } = {
+          "?": "https://cdn.icon-icons.com/icons2/2106/PNG/512/na_icon_129660.png",
+          "05": "../../../../assets/images/soja.png",
+          "06": "../../../../assets/images/milho.png",
+          "07": "../../../../assets/images/trigo.png",
+          // Adicione mais mapeamentos conforme necessário
+        };
+
+        const obterIconePorCodMoe = (codMoe: string): string => {
+          return mapeamentoIcones[codMoe] || "caminho_do_icone_padrao.png"; // Fallback para um ícone padrão, se necessário
+        };
+
+        if (data.codRet === 0) {
+          const cotacoes = data.cotacoes;
+
+          const dataAtual: string = this.obterDataAtualFormatada();
+
+          const codigosMoeda = codigosMoedaDesejados.map(item => item.codMoe);
+
+          const resultado: Cotacao[] = this.filtrarCotacoes(cotacoes, codigosMoeda, dataAtual);
+
+          const moedasFaltantes = this.verificarMoedasFaltantes(resultado, codigosMoedaDesejados);
+
+          const resultadoFinal = resultado.map((cotacao: Cotac) => {
+            return {
+                titulo: `${cotacao.desMoe}`,
+                valor: `R$${cotacao.vlrCot}`,
+                icone: obterIconePorCodMoe(cotacao.codMoe),
+            }
+          })
+
+          codigosMoedaDesejados.forEach(({ codMoe, tituloPadrao }) => {
+            if (moedasFaltantes[codMoe]) {
+              const moeda: any = {
+                titulo: `${tituloPadrao} Sem Cotação no momento`,
+                valor: ``,
+                icone: obterIconePorCodMoe(codMoe),
+              };
+
+              resultadoFinal.push(moeda);
+            }
+          });
+
+          return resultadoFinal;
+        } else {
+          const semCotacao = codigosMoedaDesejados.map((moeda) => {
+            return {
+                titulo: `${moeda.tituloPadrao} Sem Cotação no momento`,
+                valor: ``,
+                icone: obterIconePorCodMoe(moeda.codMoe),
+              }
+          })
+
+
+          return semCotacao;
+        }
+      })
+    )
+  }
+
+  filtrarCotacoes = (cotacoes: Cotacao[] , codigosMoeda: string[], data: string): Cotacao[]  => {
+    const cotacoesFiltradas: { [key: string]: Cotacao } = {};
+
+    cotacoes.forEach(cotacao => {
+      if (
+        codigosMoeda.includes(cotacao.codMoe) &&
+        cotacao.datMoe === data
+      ) {
+        cotacoesFiltradas[cotacao.codMoe] = cotacao;
+      }
+    });
+
+    return Object.values(cotacoesFiltradas);
+  };
+
+  verificarMoedasFaltantes = (
+    cotacoes: Cotacao[],
+    codigosMoedaDesejados: { codMoe: string, tituloPadrao: string }[]
+  ): MoedasFaltantes => {
+    const moedasPresentes = new Set(cotacoes.map(cotacao => cotacao.codMoe));
+    const moedasFaltantes: MoedasFaltantes = {};
+
+    codigosMoedaDesejados.forEach(({ codMoe }) => {
+      moedasFaltantes[codMoe] = !moedasPresentes.has(codMoe);
+    });
+
+    return moedasFaltantes;
+  };
+
+  obterDataAtualFormatada(): string {
+    const data: Date = new Date();
+    const dia: string = String(data.getDate()).padStart(2, '0');
+    const mes: string = String(data.getMonth() + 1).padStart(2, '0'); // Janeiro é 0!
+    const ano: number = data.getFullYear();
+
+    return `${dia}/${mes}/${ano}`;
   }
 
   mensagemErro(mensagem: string) {
