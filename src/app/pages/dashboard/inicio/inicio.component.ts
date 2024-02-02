@@ -361,8 +361,8 @@ export class InicioComponent {
       map((data) => {
         const codigosMoedaDesejados = [
           { codMoe: "05", tituloPadrao: "Soja" },
-          { codMoe: "06", tituloPadrao: "Milho" },
-          { codMoe: "07", tituloPadrao: "Trigo" },
+          { codMoe: "MIL", tituloPadrao: "Milho" },
+          { codMoe: "TRI", tituloPadrao: "Trigo" },
           // Adicione mais moedas conforme necessário
         ];
 

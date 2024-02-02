@@ -9,13 +9,13 @@ import { MenuItem } from 'primeng/api';
 export class SidebarComponent {
   sidebarVisivel = false;
   items: MenuItem[] = [];
+  itemsTwo: MenuItem[] = [];
 
 
   constructor() {
     this.items = [
       {
         label: 'Dashboard',
-        expanded: true,
         items: [
           {
             label: 'Inicio',
@@ -28,6 +28,9 @@ export class SidebarComponent {
           },
         ],
       },
+    ];
+
+    this.itemsTwo = [
       {
         label: 'Boletos e notas Fiscais',
         items: [
@@ -83,7 +86,6 @@ export class SidebarComponent {
           },
         ],
       },
-
-    ];
+    ]
   }
 }
