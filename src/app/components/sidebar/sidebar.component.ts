@@ -10,17 +10,17 @@ export class SidebarComponent {
   sidebarVisivel = false;
   items: MenuItem[] = [];
 
+
   constructor() {
     this.items = [
       {
         label: 'Dashboard',
-        icon: 'pi pi-fw pi-chart-bar',
-
+        expanded: true,
         items: [
           {
             label: 'Inicio',
             icon: 'pi pi-fw pi-chart-bar',
-            routerLink: ['/dashboard/inicio'],
+            routerLink: ['inicio'],
 
             command: () => {
               this.sidebarVisivel = false;
@@ -34,7 +34,7 @@ export class SidebarComponent {
           {
             label: 'Boletos',
             icon: 'pi pi-fw pi-ticket',
-            routerLink: ['/dashboard/boletos'],
+            routerLink: ['boletos'],
 
             command: () => {
               this.sidebarVisivel = false;
@@ -43,12 +43,17 @@ export class SidebarComponent {
           {
             label: 'Notas fiscais',
             icon: 'pi pi-fw pi-money-bill',
-            routerLink: ['/dashboard/notas-fiscais'],
+            routerLink: ['notas-fiscais'],
 
             command: () => {
               this.sidebarVisivel = false;
             },
           },
+        ],
+      },
+      {
+        label: 'Agro',
+        items: [
           {
             label: 'Romaneios',
             icon: 'pi pi-fw pi-truck',
@@ -58,8 +63,27 @@ export class SidebarComponent {
               this.sidebarVisivel = false;
             },
           },
+          {
+            label: 'Contratos',
+            icon: 'pi pi-fw pi-file-edit',
+            routerLink: ['/dashboard/contratos'],
+
+            command: () => {
+              this.sidebarVisivel = false;
+            },
+          },
+          {
+            label: 'Cotações',
+            icon: 'pi pi-fw pi-chart-line',
+            routerLink: ['/dashboard/cotacoes'],
+
+            command: () => {
+              this.sidebarVisivel = false;
+            },
+          },
         ],
       },
+
     ];
   }
 }

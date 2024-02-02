@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import ExportaRomaneios from '../types/ExportaRomaneios';
-import Usuario from '../types/Usuario';
+
+import { Usuario } from '../types/Usuario';
 import { codCli } from './inicio.service';
 
 @Injectable({
@@ -36,9 +37,9 @@ export class RomaneiosService {
 
   ExportaRomaneios(): Observable<ExportaRomaneios> {
     const body = {
-      codEmp:"5",
-      codFil: "1",
-      codFor:"1",
+      codEmp: '5',
+      codFil: '1',
+      codFor: this.codCli.codCli,
     };
 
     return this.http.post<ExportaRomaneios>(

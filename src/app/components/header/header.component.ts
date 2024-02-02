@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ThemeService } from 'src/app/services/theme.service';
-import Usuario from 'src/app/types/Usuario';
+import { Usuario } from 'src/app/types/Usuario';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +15,7 @@ export class HeaderComponent {
   tema: 'dark-theme' | 'light-theme';
 
   constructor(public router: Router, private themeService: ThemeService) {
-    this.usuario = JSON.parse(sessionStorage.getItem('usuario') || '');
+    this.usuario = JSON.parse(sessionStorage.getItem('usuario') ?? '');
     this.tema = localStorage.getItem('tema') as 'dark-theme' | 'light-theme';
 
     this.items = [
@@ -33,7 +33,7 @@ export class HeaderComponent {
             icon: 'pi pi-sign-out',
             command: () => {
               sessionStorage.removeItem('usuario');
-              this.router.navigate(['']);
+              this.router.navigate(['login']);
             },
           },
         ],

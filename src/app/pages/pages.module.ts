@@ -8,22 +8,30 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
 import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
 import { FocusTrapModule } from 'primeng/focustrap';
+import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { RippleModule } from 'primeng/ripple';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
-import { DropdownModule } from 'primeng/dropdown';
+import { TabViewModule } from 'primeng/tabview';
 
 import { ComponentsModule } from '../components/components.module';
 import { BoletosComponent } from './dashboard/boletos/boletos.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { InicioComponent } from './dashboard/inicio/inicio.component';
 import { NotasComponent } from './dashboard/notas/notas.component';
+import { RomaneiosComponent } from './dashboard/romaneios/romaneios.component';
+import { ContratosComponent } from './dashboard/contratos/contratos.component';
+import { CotacoesComponent } from './dashboard/cotacoes/cotacoes.component';
 import { LoginComponent } from './login/login.component';
 import { PagesRoutingModule } from './pages-routing.module';
-import { RomaneiosComponent } from './dashboard/romaneios/romaneios.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +41,8 @@ import { RomaneiosComponent } from './dashboard/romaneios/romaneios.component';
     BoletosComponent,
     NotasComponent,
     RomaneiosComponent,
+    ContratosComponent,
+    CotacoesComponent,
   ],
   imports: [
     CommonModule,
@@ -53,7 +63,13 @@ import { RomaneiosComponent } from './dashboard/romaneios/romaneios.component';
     ChartModule,
     SkeletonModule,
     TableModule,
+    DialogModule,
+    InputMaskModule,
+    RadioButtonModule,
+    OverlayPanelModule,
+    MenuModule,
     DropdownModule,
+    TabViewModule,
   ],
 })
 export class PagesModule {}

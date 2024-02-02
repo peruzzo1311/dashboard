@@ -1,7 +1,7 @@
 import Requisicao from './Requisicao';
 
 export default interface ExportaTitulos extends Requisicao {
-  titulos: Titulo[];
+  titulos: Titulo | Titulo[];
 }
 
 export interface Titulo {
@@ -20,5 +20,6 @@ export interface Titulo {
   codTpt: string;
   vctOri: string;
   nomFil: string;
+  cartorio: string;
   baixando?: boolean;
 }

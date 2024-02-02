@@ -1,0 +1,288 @@
+<p-dialog
+  header="Cadastro"
+  [(visible)]="mostrarMenuRegistro"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  (visibleChange)="fecharMenuRegistro()"
+>
+  <div
+    style="min-width: 350px"
+    *ngIf="mostrarEtapa1"
+    class="p-4 mx-6 slide-in-left flex justify-content-center flex-column gap-4 align-items-center"
+  >
+    <div class="flex gap-4">
+      <div class="flex align-items-center">
+        <p-radioButton
+          name="documento"
+          value="CPF"
+          inputId="CPF"
+          [(ngModel)]="tipoDocumento"
+          [disabled]="validandoDocumento"
+        />
+
+        <label for="CPF" class="ml-2 cursor-pointer">CPF</label>
+      </div>
+
+      <div class="flex align-items-center">
+        <p-radioButton
+          name="documento"
+          value="CNPJ"
+          inputId="CNPJ"
+          [required]="true"
+          [(ngModel)]="tipoDocumento"
+          [disabled]="validandoDocumento"
+        />
+
+        <label for="CNPJ" class="ml-2 cursor-pointer">CNPJ</label>
+      </div>
+    </div>
+
+    <span class="p-float-label w-full">
+      <p-inputMask
+        [mask]="
+          tipoDocumento === 'CPF' ? '999.999.999-99' : '99.999.999/9999-99'
+        "
+        [disabled]="validandoDocumento"
+        [(ngModel)]="documento"
+        class="w-full"
+      ></p-inputMask>
+
+      <label>{{ tipoDocumento }}</label>
+    </span>
+
+    <span class="p-float-label w-full">
+      <input
+        pInputText
+        required
+        class="w-full"
+        autocomplete="email"
+        [disabled]="validandoDocumento"
+        [(ngModel)]="emailRegistro"
+      />
+
+      <label>Email</label>
+    </span>
+
+    <button
+      pButton
+      pRipple
+      [label]="validandoDocumento ? 'Carregando...' : 'Verificar'"
+      class="p-button-primary p-button-raised w-full p-button-sm uppercase mt-4"
+      [loading]="validandoDocumento"
+      (click)="verificarDocumento()"
+    ></button>
+  </div>
+
+  <form
+    *ngIf="mostrarEtapa2"
+    class="flex flex-column gap-3 p-2 mx-2 slide-in-left"
+    [formGroup]="formularioCadastro"
+    #formDir="ngForm"
+    (ngSubmit)="formSubmit()"
+  >
+    <div class="w-full flex" style="gap: 12px">
+      <div class="form-group">
+        <span class="p-float-label w-full">
+          <input
+            pInputText
+            required
+            [class]="
+              'p-inputtext-sm w-full' +
+              (nome?.invalid && (nome?.dirty || nome?.touched)
+                ? ' ng-invalid ng-dirty'
+                : '')
+            "
+            autocomplete="none"
+            formControlName="nome"
+          />
+
+          <label>Nome</label>
+        </span>
+
+        <div *ngIf="nome?.invalid && (nome?.dirty || nome?.touched)">
+          <small class="text-red-700" *ngIf="nome?.hasError('required')">
+            O campo nome é obrigatório.
+          </small>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <span class="p-float-label w-full">
+          <input
+            pInputText
+            required
+            [class]="
+              'p-inputtext-sm w-full' +
+              (sobrenome?.invalid && (sobrenome?.dirty || sobrenome?.touched)
+                ? ' ng-invalid ng-dirty'
+                : '')
+            "
+            autocomplete="none"
+            formControlName="sobrenome"
+          />
+
+          <label>Sobrenome</label>
+        </span>
+
+        <div
+          *ngIf="sobrenome?.invalid && (sobrenome?.dirty || sobrenome?.touched)"
+        >
+          <small class="text-red-700" *ngIf="sobrenome?.hasError('required')">
+            O campo sobrenome é obrigatório.
+          </small>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <span class="p-float-label p-input-icon-right w-full">
+        <i
+          class="cursor-pointer"
+          [ngClass]="mostrarSenhaRegistro ? 'pi  pi-eye' : 'pi pi-eye-slash'"
+          (click)="mostrarSenhaRegistro = !mostrarSenhaRegistro"
+        ></i>
+
+        <input
+          pInputText
+          pAutoFocus
+          required
+          [class]="
+            'p-inputtext-sm w-full' +
+            (senhaRegistro?.invalid &&
+            (senhaRegistro?.dirty || senhaRegistro?.touched)
+              ? ' ng-invalid ng-dirty'
+              : '')
+          "
+          autocomplete="none"
+          [type]="mostrarSenhaRegistro ? 'text' : 'password'"
+          formControlName="senhaRegistro"
+        />
+
+        <label>Senha</label>
+      </span>
+
+      <div
+        *ngIf="
+          senhaRegistro?.invalid &&
+          (senhaRegistro?.dirty || senhaRegistro?.touched)
+        "
+        class="flex flex-column gap-2"
+      >
+        <small class="text-red-700" *ngIf="senhaRegistro?.hasError('required')">
+          O campo senha é obrigatório.
+        </small>
+
+        <small
+          class="text-red-700"
+          *ngIf="senhaRegistro?.hasError('minlength')"
+        >
+          A senha deve ter no mínimo 6 caracteres.
+        </small>
+
+        <small
+          class="text-red-700"
+          *ngIf="senhaRegistro?.hasError('maxlength')"
+        >
+          A senha deve ter no máximo 20 caracteres.
+        </small>
+
+        <small
+          class="text-red-700 white-space-normal"
+          *ngIf="senhaRegistro?.hasError('pattern')"
+        >
+          A senha deve conter: <br />
+          - Pelo menos uma letra maiúscula. <br />
+          - Pelo menos uma letra minúscula. <br />
+          - Pelo menos um número. <br />
+          {{ "- Pelo menos um caractere especial(!@#$%^&*, etc...)." }} <br />
+        </small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <span class="p-float-label p-input-icon-right w-full">
+        <i
+          class="cursor-pointer"
+          [ngClass]="mostrarConfirmarSenha ? 'pi  pi-eye' : 'pi pi-eye-slash'"
+          (click)="mostrarConfirmarSenha = !mostrarConfirmarSenha"
+        ></i>
+
+        <input
+          pInputText
+          pAutoFocus
+          required
+          [class]="
+            'p-inputtext-sm w-full' +
+            (senhaRegistro?.value !== confirmarSenha?.value &&
+            (confirmarSenha?.dirty || confirmarSenha?.touched)
+              ? ' ng-invalid ng-dirty'
+              : '')
+          "
+          autocomplete="none"
+          [type]="mostrarConfirmarSenha ? 'text' : 'password'"
+          formControlName="confirmarSenha"
+        />
+
+        <label>Confirmar senha</label>
+      </span>
+
+      <div *ngIf="confirmarSenha?.dirty || confirmarSenha?.touched">
+        <small
+          class="text-red-700"
+          *ngIf="senhaRegistro?.value !== confirmarSenha?.value"
+        >
+          As senhas devem ser iguais
+        </small>
+      </div>
+    </div>
+
+    <div class="mt-6 flex justify-content-center">
+      <p-button
+        type="submit"
+        icon="pi pi-check"
+        label="Cadastrar"
+        class="p-inputtext-sm"
+        [disabled]="
+          formularioCadastro.invalid ||
+          senhaRegistro?.value !== confirmarSenha?.value
+        "
+      />
+    </div>
+  </form>
+
+  <div
+    *ngIf="mostrarEtapa3"
+    class="slide-in-left py-2 px-4"
+    style="width: 450px"
+  >
+    <div *ngIf="cadastrando" class="fadein animation-duration-1000">
+      <div class="flex flex-column gap-4 align-items-center">
+        <i class="pi pi-spin pi-spinner text-6xl"></i>
+
+        <h3 class="text-center">
+          Criando usuário... <br />
+          <small class="text-gray-500">
+            Aguarde enquanto o usuário é criado.
+          </small>
+        </h3>
+      </div>
+    </div>
+
+    <div
+      class="flex flex-column gap-4 align-items-center fadein animation-duration-1000"
+      *ngIf="!cadastrando"
+    >
+      <i class="pi pi-check-circle text-green-500 text-6xl"></i>
+
+      <h3 class="text-center">
+        Usuário {{ loginUsuario }} criado com sucesso! <br />
+        <small class="text-gray-500">
+          Use o seu login e senha para acessar a plataforma.
+        </small>
+      </h3>
+    </div>
+  </div>
+</p-dialog>
+
+<p-toast />

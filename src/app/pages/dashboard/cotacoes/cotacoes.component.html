@@ -1,0 +1,47 @@
+<p-tabView (onChange)="onTabChange($event)" [scrollable]="true">
+  <p-tabPanel *ngFor="let year of years" header="{{year}}">
+    <!-- Skeleton enquanto os dados estão sendo carregados -->
+    <p-skeleton *ngIf="carregando" height="20rem" width="100%" animation="wave"></p-skeleton>
+
+    <!-- Conteúdo da tabela -->
+    <ng-container *ngIf="!carregando">
+      <!-- Verifica se existem dados para exibir -->
+      <ng-container *ngIf="dataForSelectedYear.length > 0; else noDataTemplate">
+        <p-table
+          [value]="dataForSelectedYear"
+          [columns]="cols"
+          [paginator]="true"
+          [rows]="quantidadeLinhas"
+          [responsiveLayout]="'scroll'"
+        >
+          <!-- Cabeçalho da tabela -->
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns">
+                {{col.header}}
+              </th>
+            </tr>
+          </ng-template>
+          <!-- Corpo da tabela -->
+          <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+              <td *ngFor="let col of columns">
+                <ng-container *ngIf="col.field === 'vlrPre' || col.field === 'vlrCot'; else other_fields">
+                  {{rowData[col.field] | currency:'BRL'}}
+                </ng-container>
+                <ng-template #other_fields>
+                    {{rowData[col.field]}}
+                </ng-template>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </ng-container>
+    </ng-container>
+
+    <!-- Template para exibir quando não há dados -->
+    <ng-template #noDataTemplate>
+      <p>Não há dados disponíveis para o ano de {{year}}.</p>
+    </ng-template>
+  </p-tabPanel>
+</p-tabView>

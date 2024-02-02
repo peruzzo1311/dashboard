@@ -1,10 +1,11 @@
-<div class="fadeinright animation-duration-500 animation-ease-out">
+<div class="slide-in-left">
   <p-card>
     <p-table
       #tableBoletos
       [value]="boletos"
       styleClass="p-datatable-striped"
       [(selection)]="boletosSelecionados"
+      [selectionPageOnly]="true"
       dataKey="numTit"
       [paginator]="true"
       [rows]="quantidadeLinhas"
@@ -14,7 +15,13 @@
       loadingIcon="pi pi-spin pi-spinner"
       (sortFunction)="ordenar($event)"
       [customSort]="true"
-      [globalFilterFields]="['numTit', 'nomCli', 'vlrAbe', 'vctPro']"
+      [globalFilterFields]="[
+        'numTit',
+        'nomCli',
+        'vlrAbe',
+        'vctPro',
+        'cartorio'
+      ]"
     >
       <ng-template pTemplate="caption">
         <div class="flex justify-content-between">
@@ -71,6 +78,9 @@
           <th pSortableColumn="vlrAbe">
             Valor <p-sortIcon field="vlrAbe"> </p-sortIcon>
           </th>
+          <th pSortableColumn="cartorio">
+            Situação <p-sortIcon field="cartorio"> </p-sortIcon>
+          </th>
           <th pSortableColumn="vctPro">
             Data de vencimento <p-sortIcon field="vctPro"> </p-sortIcon>
           </th>
@@ -88,6 +98,7 @@
           <td>
             {{ currencyFormatter(boleto.vlrAbe) }}
           </td>
+          <td>{{ boleto.cartorio === "Não" ? "Aberto" : "Cartório" }}</td>
           <td>{{ boleto.vctPro }}</td>
           <td class="flex justify-content-center">
             <i

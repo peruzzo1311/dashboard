@@ -5,12 +5,22 @@ import { Observable } from 'rxjs';
 
 import { ExportaPagamentos } from '../types/ExportaPagamentos';
 import ExportaPagamentosPeriodo from '../types/ExportaPagamentosPeriodo';
-import Usuario from '../types/Usuario';
+import { Usuario } from '../types/Usuario';
 import ConsultaValorFaturadoMes from '../types/consultaValorFaturadoMes';
 import consultaValorFaturadoMesAnterior from '../types/consultaValorFaturadoMesAnterior';
 
 export interface codCli {
   codCli: string | number;
+}
+export interface codEmp {
+  codEmp: string | number;
+}
+export interface codFil {
+  codFil: string | number;
+}
+
+export interface codFor {
+  codFor: string | number;
 }
 
 @Injectable({
@@ -24,9 +34,21 @@ export class InicioService {
     codCli: '',
   };
 
+  private codEmp: codEmp = {
+    codEmp: '',
+  };
+
+  private codFil: codFil = {
+    codFil: '',
+  };
+
+  private codFor: codFor = {
+    codFor: '',
+  };
+
   constructor(private http: HttpClient, private router: Router) {
     if (!this.usuario) {
-      router.navigate(['/login']);
+      router.navigate(['login']);
     } else {
       this.usuario.properties.forEach((propriedade) => {
         const { name, value } = propriedade;
@@ -34,6 +56,21 @@ export class InicioService {
         if (name.toLowerCase() === 'codcli') {
           this.codCli = {
             codCli: value,
+          };
+        }
+        if (name.toLowerCase() === 'codemp') {
+          this.codEmp = {
+            codEmp: value,
+          };
+        }
+        if (name.toLowerCase() === 'codfil') {
+          this.codFil = {
+            codFil: value,
+          };
+        }
+        if (name.toLowerCase() === 'codfor') {
+          this.codFor = {
+            codFor: value,
           };
         }
       });

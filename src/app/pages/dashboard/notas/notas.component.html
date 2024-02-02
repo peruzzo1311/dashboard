@@ -1,10 +1,11 @@
-<div class="fadeinright animation-duration-500 animation-ease-out">
+<div class="slide-in-left">
   <p-card>
     <p-table
       #tableNotas
       [value]="notas"
       styleClass="p-datatable-striped"
       [(selection)]="notasSelecionadas"
+      [selectionPageOnly]="true"
       [paginator]="true"
       [rows]="quantidadeLinhas"
       [totalRecords]="totalRegistros"
@@ -18,19 +19,35 @@
     >
       <ng-template pTemplate="caption">
         <div class="flex justify-content-between">
-          <button
-            pButton
-            pRipple
-            label="Baixar Notas"
-            [class]="
-              notasSelecionadas.length === 0
-                ? 'p-button-outlined'
-                : 'p-button-primary'
-            "
-            icon="pi pi-download"
-            (click)="baixarMultiplasNotas()"
-            [disabled]="notasSelecionadas.length === 0"
-          ></button>
+          <div class="flex gap-4">
+            <button
+              pButton
+              pRipple
+              label="Baixar PDF's"
+              [class]="
+                notasSelecionadas.length === 0
+                  ? 'p-button-outlined'
+                  : 'p-button-primary'
+              "
+              icon="pi pi-download"
+              (click)="baixarMultiplasNotas()"
+              [disabled]="notasSelecionadas.length === 0"
+            ></button>
+
+            <button
+              pButton
+              pRipple
+              label="Baixar XML's"
+              [class]="
+                notasSelecionadas.length === 0
+                  ? 'p-button-outlined'
+                  : 'p-button-primary'
+              "
+              icon="pi pi-download"
+              (click)="baixarMultiplasNotasXML()"
+              [disabled]="notasSelecionadas.length === 0"
+            ></button>
+          </div>
 
           <div class="flex gap-4">
             <button
@@ -90,10 +107,35 @@
                   : 'pi pi-download cursor-pointer'
               "
               style="font-size: 1.5rem"
-              (click)="nota.baixando ? null : baixarNotas(nota)"
+              (click)="nota.baixando ? null : download.toggle($event)"
             ></i>
           </td>
         </tr>
+
+        <p-overlayPanel #download>
+          <div class="menu-item" pRipple (click)="baixarNota(nota, 'pdf')">
+            <span
+              ><i class="pi pi-file-pdf" style="font-size: 1.2rem"></i
+            ></span>
+            <span>Baixar PDF</span>
+          </div>
+
+          <div class="menu-item" pRipple (click)="baixarNota(nota, 'xml')">
+            <span
+              ><i class="pi pi-file-excel" style="font-size: 1.2rem"></i
+            ></span>
+            <span>Baixar XML</span>
+          </div>
+
+          <div
+            class="menu-item"
+            pRipple
+            (click)="baixarNota(nota, 'pdf e xml')"
+          >
+            <span><i class="pi pi-file" style="font-size: 1.2rem"></i></span>
+            <span>Baixar PDF e XML</span>
+          </div>
+        </p-overlayPanel>
       </ng-template>
     </p-table>
   </p-card>

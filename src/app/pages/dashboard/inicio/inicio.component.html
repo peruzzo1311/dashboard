@@ -1,5 +1,35 @@
 <div
-  class="grid grid-nogutter gap-4 justify-content-center"
+  class="grid grid-nogutter gap-4 justify-content-center slide-in-left mb-4"
+  *ngIf="!carregandoCards; else skeletonCards"
+>
+  <div class="col" *ngFor="let card of cardsCotacao">
+    <p-card class="fadein animation-duration-1000 animation-ease-out kpiCard">
+      <div class="flex justify-content-start align-items-center gap-2 w-full">
+        <img
+          [src]="card.icone"
+          style="
+            height: 4rem;
+            color: var(--primary-color);
+            background-color: rgb(1 113 187 / 20%);
+            border-radius: 0.5rem;
+            padding: 0.625rem;
+          "
+        >
+
+        <div class="flex flex-column justify-content-start">
+          <span class="text-600 text-sm">{{ card.titulo }}</span>
+
+          <span class="text-3xl font-medium text-900">
+            {{ card.valor }}
+          </span>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>
+
+<div
+  class="grid grid-nogutter gap-4 justify-content-center slide-in-left"
   *ngIf="!carregandoCards; else skeletonCards"
 >
   <div class="col" *ngFor="let card of cards">
@@ -11,7 +41,7 @@
             font-size: 2rem;
             font-weight: 700;
             color: var(--primary-color);
-            background-color: rgb(0 113 187 / 30%);
+            background-color: rgb(1 113 187 / 20%);
             border-radius: 0.5rem;
             padding: 0.625rem;
           "
@@ -30,10 +60,10 @@
 </div>
 
 <div
-  class="grid grid-nogutter mt-4 justify-content-between"
+  class="grid grid-nogutter mt-4 justify-content-between slide-in-left gap-4 lg:gap-0"
   *ngIf="!carregandoGraficos; else skeletonGraficos"
 >
-  <div class="col-12 lg:col-6 pr-2">
+  <div class="col-12 lg:col-6 lg:pr-2">
     <p-card class="fadein animation-duration-1000 animation-ease-out graphCard">
       <span class="text-xl font-medium text-800">
         Contas a pagar nos próximos 6 dias
@@ -49,10 +79,10 @@
     </p-card>
   </div>
 
-  <div class="col-12 lg:col-6 pl-2">
-    <p-card class="fadein animation-duration-1000 animation-ease-out graphCard">
+  <div class="col-12 lg:col-6 lg:pl-2">
+    <p-card class="fadein animation-duration-1000 animation-ease-out graphCard flex w-full h-full">
       <span class="text-xl font-medium text-800">
-        Contas a pagar nos próximos 6 dias
+        Contas a pagar por período
       </span>
 
       <div class="mt-4">

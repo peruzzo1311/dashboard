@@ -1,4 +1,4 @@
-export default interface Usuario {
+export interface Usuario {
   admin: boolean;
   allowedToChangePassword: boolean;
   authenticationType: string;
@@ -23,4 +23,14 @@ export default interface Usuario {
 export interface Propriedades {
   name: string;
   value: string;
+}
+
+export interface UsuarioRegistro {
+  nome: string | null | undefined;
+  sobrenome: string | null | undefined;
+  loginUsuario: string;
+  email: string;
+  senha: string | null | undefined;
+  codCli: number;
+  token: string;
 }

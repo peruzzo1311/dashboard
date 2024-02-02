@@ -1,10 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { Subscription } from 'rxjs';
+import { ModalForgotPasswordComponent } from 'src/app/components/modal-forgot-password/modal-forgot-password.component';
+import { ModalRegistroUsuarioComponent } from 'src/app/components/modal-registro-usuario/modal-registro-usuario.component';
+import { ModalResetPasswordComponent } from 'src/app/components/modal-reset-password/modal-reset-password.component';
 import { LoginService } from 'src/app/services/login.service';
-import Usuario from 'src/app/types/Usuario';
+import { Usuario } from 'src/app/types/Usuario';
 
 @Component({
   selector: 'app-login',
@@ -13,14 +14,19 @@ import Usuario from 'src/app/types/Usuario';
   providers: [LoginService, MessageService],
 })
 export class LoginComponent {
-  @ViewChild('formulario') formulario!: NgForm;
+  @ViewChild(ModalRegistroUsuarioComponent)
+  modalRegistroUsuario!: ModalRegistroUsuarioComponent;
+
+  @ViewChild(ModalResetPasswordComponent)
+  modalResetPassword!: ModalResetPasswordComponent;
+
+  @ViewChild(ModalForgotPasswordComponent)
+  modalForgotPassword!: ModalForgotPasswordComponent;
 
   title = 'dashboard';
-  mostrarSenha = false;
   carregando = false;
-
-  login$!: Subscription;
-  getUser$!: Subscription;
+  mostrarSenha = false;
+  tokenTemporario = '';
 
   constructor(
     private loginService: LoginService,
@@ -28,7 +34,7 @@ export class LoginComponent {
     private messageService: MessageService
   ) {
     if (sessionStorage.getItem('usuario')) {
-      this.router.navigate(['/dashboard']);
+      this.router.navigate(['dashboard']);
     }
   }
 
@@ -36,13 +42,34 @@ export class LoginComponent {
     this.mostrarSenha = !this.mostrarSenha;
   }
 
+  showMenuRegistro() {
+    this.modalRegistroUsuario.show();
+  }
+
+  showModalResetPassword() {
+    this.modalResetPassword.show();
+  }
+
+  showModalForgotPassword() {
+    this.modalForgotPassword.show();
+  }
+
   entrar(usuario: string, senha: string) {
     this.carregando = true;
+    usuario = `${usuario.trim().toLowerCase()}@prisma-demo.com.br.seniorx`;
     let token = '';
 
     this.loginService.login(usuario, senha).subscribe({
       next: (res: any) => {
-        token = JSON.parse(res.jsonToken).access_token;
+        if (res.resetPasswordInfo) {
+          this.showModalResetPassword();
+
+          this.tokenTemporario = res.resetPasswordInfo.temporaryToken;
+
+          return;
+        } else {
+          token = JSON.parse(res.jsonToken).access_token;
+        }
 
         this.loginService.getUser(usuario, token).subscribe({
           next: (res: any) => {
@@ -52,7 +79,7 @@ export class LoginComponent {
             if (usuario) {
               sessionStorage.setItem('usuario', JSON.stringify(usuario));
 
-              this.router.navigate(['/dashboard']);
+              this.router.navigate(['dashboard']);
             } else {
               alert('Usuário não encontrado');
             }
@@ -94,15 +121,5 @@ export class LoginComponent {
     setTimeout(() => {
       this.messageService.clear();
     }, 3000);
-  }
-
-  ngOnDestroy() {
-    if (this.login$) {
-      this.login$.unsubscribe();
-    }
-
-    if (this.getUser$) {
-      this.getUser$.unsubscribe();
-    }
   }
 }
