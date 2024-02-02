@@ -72,6 +72,15 @@ export class SidebarComponent {
               this.sidebarVisivel = false;
             },
           },
+          {
+            label: 'Cotações',
+            icon: 'pi pi-fw pi-chart-line',
+            routerLink: ['/dashboard/cotacoes'],
+
+            command: () => {
+              this.sidebarVisivel = false;
+            },
+          },
         ],
       },
 

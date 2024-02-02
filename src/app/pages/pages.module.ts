@@ -20,6 +20,7 @@ import { RippleModule } from 'primeng/ripple';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { TabViewModule } from 'primeng/tabview';
 
 import { ComponentsModule } from '../components/components.module';
 import { BoletosComponent } from './dashboard/boletos/boletos.component';
@@ -28,6 +29,7 @@ import { InicioComponent } from './dashboard/inicio/inicio.component';
 import { NotasComponent } from './dashboard/notas/notas.component';
 import { RomaneiosComponent } from './dashboard/romaneios/romaneios.component';
 import { ContratosComponent } from './dashboard/contratos/contratos.component';
+import { CotacoesComponent } from './dashboard/cotacoes/cotacoes.component';
 import { LoginComponent } from './login/login.component';
 import { PagesRoutingModule } from './pages-routing.module';
 
@@ -40,6 +42,7 @@ import { PagesRoutingModule } from './pages-routing.module';
     NotasComponent,
     RomaneiosComponent,
     ContratosComponent,
+    CotacoesComponent,
   ],
   imports: [
     CommonModule,
@@ -66,6 +69,7 @@ import { PagesRoutingModule } from './pages-routing.module';
     OverlayPanelModule,
     MenuModule,
     DropdownModule,
+    TabViewModule,
   ],
 })
 export class PagesModule {}
