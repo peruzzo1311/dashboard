@@ -371,8 +371,8 @@ export class InicioComponent {
         } = {
           "?": "https://cdn.icon-icons.com/icons2/2106/PNG/512/na_icon_129660.png",
           "05": "assets/images/soja.png",
-          "06": "assets/images/milho.png",
-          "07": "assets/images/trigo.png",
+          "MIL": "assets/images/milho.png",
+          "TRI": "assets/images/trigo.png",
           // Adicione mais mapeamentos conforme necessário
         };
 
