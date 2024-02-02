@@ -10,12 +10,12 @@ export class SidebarComponent {
   sidebarVisivel = false;
   items: MenuItem[] = [];
 
+
   constructor() {
     this.items = [
       {
         label: 'Dashboard',
-        icon: 'pi pi-fw pi-chart-bar',
-
+        expanded: true,
         items: [
           {
             label: 'Inicio',

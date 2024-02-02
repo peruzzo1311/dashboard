@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import ExportaCotacoes from '../types/ExportaCotacoes';
 
 import { Usuario } from '../types/Usuario';
-import { codCli, codEmp, codFil, codFor } from './inicio.service';
+import { codCli, codEmp, codFil } from './inicio.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,19 +15,13 @@ export class CotacoesService {
   private usuario: Usuario = JSON.parse(
     sessionStorage.getItem('usuario') || '{}'
   );
-  private codCli: codCli = {
-    codCli: '',
-  };
+
   private codEmp: codEmp = {
     codEmp: '',
   };
 
   private codFil: codFil = {
     codFil: '',
-  };
-
-  private codFor: codFor = {
-    codFor: '',
   };
 
   constructor(private http: HttpClient, private router: Router) {
@@ -37,11 +31,6 @@ export class CotacoesService {
       this.usuario.properties.forEach((propriedade) => {
         const { name, value } = propriedade;
 
-        if (name.toLowerCase() === 'codcli') {
-          this.codCli = {
-            codCli: value,
-          };
-        }
         if (name.toLowerCase() === 'codemp') {
           this.codEmp = {
             codEmp: value,
@@ -50,11 +39,6 @@ export class CotacoesService {
         if (name.toLowerCase() === 'codfil') {
           this.codFil = {
             codFil: value,
-          };
-        }
-        if (name.toLowerCase() === 'codfor') {
-          this.codFor = {
-            codFor: value,
           };
         }
       });
@@ -70,7 +54,6 @@ export class CotacoesService {
       dataFim: datFim,
       codEmp: this.codEmp.codEmp,
       codFil: this.codFil.codFil,
-      codFor: this.codFor.codFor,
     };
 
     return this.http.post<ExportaCotacoes>(

@@ -86,8 +86,6 @@ export class CotacoesComponent {
       { field: 'codMoe', header: 'Código Moeda' },
       { field: 'desMoe', header: 'Descrição' },
       { field: 'datGer', header: 'Data Geração' },
-      { field: 'datMoe', header: 'Data Moeda' },
-      { field: 'vlrPre', header: 'Valor Preço' },
       { field: 'vlrCot', header: 'Valor Cotação' }
     ];
 
@@ -126,7 +124,7 @@ export class CotacoesComponent {
         this.dataForSelectedYear = data.cotacoes;
         this.totalRegistros = data.cotacoes.length;
       } else {
-        this.mensagemErro(data.msgRet);
+        this.mensagemErro(`Cotações: ${data.msgRet}`);
         this.dataForSelectedYear = []
       }
 

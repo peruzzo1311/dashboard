@@ -1,17 +1,17 @@
 :host {
   ::ng-deep {
-    .p-menu {
+    .p-panelmenu {
       width: 100%;
       border: none;
       background: none;
     }
 
-    .p-menu .p-menuitem-link {
+    .p-panelmenu .p-menuitem-link {
       border-radius: 8px;
       margin-left: 1rem;
     }
 
-    .p-menu .p-submenu-header {
+    .p-panelmenu .p-submenu-header {
       font-weight: 700;
     }
 
@@ -26,6 +26,10 @@
       .p-menuitem-icon {
         color: #fff !important;
       }
+    }
+
+    .p-panelmenu .p-panelmenu-panel {
+      box-shadow: none;
     }
   }
 }
