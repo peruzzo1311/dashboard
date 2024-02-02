@@ -370,9 +370,9 @@ export class InicioComponent {
           [codMoe: string]: string;
         } = {
           "?": "https://cdn.icon-icons.com/icons2/2106/PNG/512/na_icon_129660.png",
-          "05": "../../../../assets/images/soja.png",
-          "06": "../../../../assets/images/milho.png",
-          "07": "../../../../assets/images/trigo.png",
+          "05": "assets/images/soja.png",
+          "06": "assets/images/milho.png",
+          "07": "assets/images/trigo.png",
           // Adicione mais mapeamentos conforme necessário
         };
 
@@ -394,7 +394,7 @@ export class InicioComponent {
           const resultadoFinal = resultado.map((cotacao: Cotac) => {
             return {
                 titulo: `${cotacao.desMoe}`,
-                valor: `R$${cotacao.vlrCot}`,
+                valor: `${this.currencyFormatter(cotacao.vlrCot)}`,
                 icone: obterIconePorCodMoe(cotacao.codMoe),
             }
           })
