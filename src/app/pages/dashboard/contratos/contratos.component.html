@@ -78,19 +78,13 @@
             Origem da Mercadoria
           </th>
           <th>
-            Derivação
-          </th>
-          <th>
-            Tabela de Preço
-          </th>
-          <th>
             Preço Unitário
           </th>
           <th>
             Quantidade
           </th>
           <th>
-            Qtd. Utilizada
+            Data Emissão
           </th>
         </tr>
       </ng-template>
@@ -103,16 +97,14 @@
           <td>{{ contrato.tipVlz == 1 ? 'Valorização Fixa' : (contrato.tipVlz == 2 ? 'Valorização Variável' : '') }}</td>
           <td>{{contrato.codMoe}}</td>
           <td>{{contrato.codSaf}}</td>
-          <td>{{contrato.produtos[0].codPro}}</td>
-          <td>{{contrato.produtos[0].cplCcp}}</td>
-          <td>{{contrato.produtos[0].uniMed}}</td>
-          <td>{{contrato.produtos[0].codDep}}</td>
-          <td>{{contrato.produtos[0].oriMer}}</td>
-          <td>{{contrato.produtos[0].codDer}}</td>
-          <td>{{contrato.produtos[0].codTpr}}</td>
-          <td>{{contrato.produtos[0].preUni}}</td>
-          <td>{{contrato.produtos[0].qtdFor}}</td>
-          <td>{{contrato.produtos[0].qtdUti}}</td>
+          <td>{{contrato.codPro}}</td>
+          <td>{{contrato.cplCcp}}</td>
+          <td>{{contrato.uniMed}}</td>
+          <td>{{contrato.codDep}}</td>
+          <td>{{contrato.oriMer}}</td>
+          <td>{{ currencyFormatter(contrato.preUni) }}</td>
+          <td>{{contrato.qtdFor}}</td>
+          <td>{{contrato.datEmi}}</td>
         </tr>
       </ng-template>
     </p-table>

@@ -29,14 +29,6 @@ export class ContratosComponent {
     sessionStorage.getItem('usuario') || '{}'
   );
 
-  private codCli: codCli = {
-    codCli: '',
-  };
-
-  private codEmp: codEmp = {
-    codEmp: '',
-  };
-
   private codFor: codFor = {
     codFor: '',
   };
@@ -55,16 +47,6 @@ export class ContratosComponent {
       this.usuario.properties.forEach((propriedade) => {
         const { name, value } = propriedade;
 
-        if (name.toLowerCase() === 'codcli') {
-          this.codCli = {
-            codCli: value,
-          };
-        }
-        if (name.toLowerCase() === 'codemp') {
-          this.codEmp = {
-            codEmp: value,
-          };
-        }
         if (name.toLowerCase() === 'codfor') {
           this.codFor = {
             codFor: value,
@@ -78,10 +60,8 @@ export class ContratosComponent {
   exportaContratos() {
     this.exportaContratos$ = this.contratosService.ExportaContratos().subscribe((data) => {
 
-      if (data.tipoRetorno === 0) {
-        const {codFor} = this.codFor;
-
-        this.contratoCompra = this.filtrarPorCodFor(data.contratoCompra, Number(codFor));
+      if (data.codRet === 0) {
+        this.contratoCompra = data.contratos;
         this.totalRegistros = this.contratoCompra.length;
       } else {
         this.mensagemErro(data.msgRet);
@@ -91,15 +71,13 @@ export class ContratosComponent {
     });
   }
 
-  filtrarPorCodFor(contratos: ContratoCompra[], codForFiltro: number): ContratoCompra[] {
-    return contratos.map(contrato => {
-      const produtosFiltrados = contrato.produtos.map(produto => {
-        const fornecedoresFiltrados = produto.fornecedoresParticipantes.filter(fornecedor => fornecedor.codFor === codForFiltro);
-        return { ...produto, fornecedoresParticipantes: fornecedoresFiltrados };
-      });
+  currencyFormatter(valor: number): string {
+    const valorFormatado = valor.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
 
-      return { ...contrato, produtos: produtosFiltrados };
-    }).filter(contrato => contrato.codFor === codForFiltro || contrato.produtos.some(produto => produto.fornecedoresParticipantes.length > 0));
+    return valorFormatado;
   }
 
   ordenar(event: SortEvent) {
