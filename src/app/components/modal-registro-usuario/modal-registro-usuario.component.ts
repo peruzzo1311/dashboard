@@ -77,7 +77,7 @@ export class ModalRegistroUsuarioComponent {
           next: (res) => {
             if (res.codRet === 0) {
               this.codCli = res.codCli;
-              this.loginUsuario = res.userName.toLowerCase();
+              this.loginUsuario = res.userName.toString().toLowerCase();
 
               this.mostrarEtapa1 = false;
               this.mostrarEtapa2 = true;
