@@ -44,7 +44,7 @@ export class InicioService {
     const body = this.codCli;
 
     return this.http.post<consultaValorFaturadoMesAnterior>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaFaturasMesAnterior&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal.faturas&port=ExportaFaturasMesAnterior&useAlwaysArray=true',
       body,
       {
         headers: {
@@ -62,7 +62,7 @@ export class InicioService {
     const body = this.codCli;
 
     return this.http.post<ConsultaValorFaturadoMes>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaFaturasMesAtual&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal.faturas&port=ExportaFaturasMesAtual&useAlwaysArray=true',
       body,
       {
         headers: {
@@ -80,7 +80,7 @@ export class InicioService {
     const body = this.codCli;
 
     return this.http.post<ExportaPagamentos>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaPagamentos6&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal.faturas&port=ExportaPagamentos6&useAlwaysArray=true',
       body,
       {
         headers: {
@@ -98,7 +98,7 @@ export class InicioService {
     const body = this.codCli;
 
     return this.http.post<ExportaPagamentosPeriodo>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=ExportaPagamentosPeriodo&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal.faturas&port=ExportaPagamentosPeriodo&useAlwaysArray=true',
       body,
       {
         headers: {

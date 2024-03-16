@@ -57,7 +57,7 @@ export class LoginService {
     };
 
     return this.http.post<ValidarDocumento>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&port=ValidaCNPJ&useAlwaysArray=true&service=com.prisma.portal.faturas',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&port=ValidaCNPJ&useAlwaysArray=true&service=com.prisma.portal.faturas',
       data,
       {
         headers: {
@@ -147,7 +147,7 @@ export class LoginService {
     };
 
     return this.http.post<ValidarDocumento>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&port=EnviaEmailTrocaSenha&useAlwaysArray=true&service=com.prisma.portal.faturas',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&port=EnviaEmailTrocaSenha&useAlwaysArray=true&service=com.prisma.portal.faturas',
       data,
       {
         headers: {

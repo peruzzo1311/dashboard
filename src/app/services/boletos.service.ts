@@ -39,7 +39,7 @@ export class BoletosService {
     const body = this.codCli;
 
     return this.http.post<ExportaTitulos>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&port=ExportaTitulos&useAlwaysArray=true&service=com.prisma.portal.faturas',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&port=ExportaTitulos&useAlwaysArray=true&service=com.prisma.portal.faturas',
       body,
       {
         headers: {
@@ -62,7 +62,7 @@ export class BoletosService {
     };
 
     return this.http.post<baixarTitulos>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=BaixarBoleto&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal.faturas&port=BaixarBoleto&useAlwaysArray=true',
       body,
       {
         headers: {

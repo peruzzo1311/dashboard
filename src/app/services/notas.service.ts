@@ -39,7 +39,7 @@ export class NotasService {
     const body = this.codCli;
 
     return this.http.post<exportaNotas>(
-      'https://sistema.kgepel.com.br:443/API/G5Rest?server=https://sistema.kgepel.com.br:443&module=sapiens&service=com.prisma.portal.faturas&port=ExportaNotas&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal.faturas&port=ExportaNotas&useAlwaysArray=true',
       body,
       {
         headers: {
@@ -62,7 +62,7 @@ export class NotasService {
     };
 
     return this.http.post<baixarNotas>(
-      'https://sistema.kgepel.com.br/API/G5Rest?server=https://sistema.kgepel.com.br&module=sapiens&service=com.prisma.portal.faturas&port=BaixarDanfe&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal.faturas&port=BaixarDanfe&useAlwaysArray=true',
       body,
       {
         headers: {
@@ -85,7 +85,7 @@ export class NotasService {
     };
 
     return this.http.post<baixarNotasXml>(
-      'https://sistema.kgepel.com.br:443/API/G5Rest?server=https://sistema.kgepel.com.br:443&module=sapiens&service=com.prisma.portal.faturas&port=BaixarXml&useAlwaysArray=true',
+      'https://sistema.kgepel.com.br/SXI/G5Rest?server=http://localhost:8080&module=sapiens&service=com.prisma.portal.faturas&port=BaixarXml&useAlwaysArray=true',
       body,
       {
         headers: {
